@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="470.0" prefWidth="841.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EnterUsernameController">
+   <children>
+      <ImageView fitHeight="470.0" fitWidth="850.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <image>
+            <Image url="@../../../../../Downloads/code%20breaker%20%20(3).png" />
+         </image>
+      </ImageView>
+      <TextField layoutX="341.0" layoutY="278.0" prefHeight="25.0" prefWidth="150.0" promptText="Enter your username" />
+      <Button layoutX="400.0" layoutY="321.0" mnemonicParsing="false" onAction="#onOKBtnClick" text="OK" />
+   </children>
+</AnchorPane>
