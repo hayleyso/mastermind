@@ -8,19 +8,23 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-public class App extends Application {
+public class CodeBreaker extends Application {
+    final int WINDOW_WIDTH = 12000;
+    final int WINDOW_HEIGHT = 900;
+
     @Override
     public void start(Stage primaryStage) throws IOException {
         
-        Parent root = FXMLLoader.load(getClass().getResource("StartMenu.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("gui/scenes/StartMenu.fxml"));
         Scene scene = new Scene(root);
-
 
         primaryStage.setTitle("Code Breaker");
         primaryStage.setScene(scene);
         primaryStage.show();
+        
     }
 
     public static void main(String[] args) {

@@ -1,3 +1,5 @@
+package gui.controllers;
+
 import java.io.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -7,12 +9,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class HTP1Controller {
+public class HTP2 {
 
     @FXML
     void onNextBtnClick(ActionEvent event) throws IOException {
-        Parent gameOverviewParent = FXMLLoader.load(getClass().getResource("HTP2.fxml"));
-        Scene gameOverviewScene = new Scene(gameOverviewParent);
+        Parent gameOverviewparent = FXMLLoader.load(getClass().getResource("/gui/scenes/DifficultyLevelSelector.fxml"));
+        Scene gameOverviewScene = new Scene(gameOverviewparent);
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         
         window.setScene(gameOverviewScene);

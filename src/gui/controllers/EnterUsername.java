@@ -1,3 +1,5 @@
+package gui.controllers;
+
 import java.io.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -7,12 +9,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class EnterUsernameController {
+public class EnterUsername {
     private String username;
 
     @FXML
     void onOKBtnClick(ActionEvent event) throws IOException {
-        Parent gameOverviewparent = FXMLLoader.load(getClass().getResource("GameOverview.fxml"));
+        Parent gameOverviewparent = FXMLLoader.load(getClass().getResource("/gui/scenes/GameOverview.fxml"));
         Scene gameOverviewScene = new Scene(gameOverviewparent);
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         

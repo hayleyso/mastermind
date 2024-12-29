@@ -6,11 +6,11 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="470.0" prefWidth="841.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="StartMenuController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="470.0" prefWidth="841.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.StartMenu">
    <children>
       <ImageView fitHeight="470.0" fitWidth="850.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <image>
-            <Image url="@../../../../../Downloads/code%20breaker%20%20(1).png" />
+            <Image url="@../../gui/img/StartMenu.png" />
          </image>
       </ImageView>
       <Button layoutX="389.0" layoutY="264.0" mnemonicParsing="false" onAction="#onPlayBtnClick" prefHeight="18.0" prefWidth="57.0" style="-fx-background-color: ivory;" text="Play" textFill="#171717">
