@@ -8,8 +8,5 @@ import javafx.scene.image.ImageView;
 public class GameBoard {
     @FXML
     private ImageView background;
-
-    private Button[] colorSelector = new Button[CodeBreaker.NUM_COLORS];
-
     
 }
