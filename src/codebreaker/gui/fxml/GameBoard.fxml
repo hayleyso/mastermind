@@ -6,7 +6,7 @@
 
 <AnchorPane layoutY="55.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="841.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="codebreaker.controllers.GameBoard">
    <children>
-      <ImageView fx:id="img" fitHeight="715.0" fitWidth="810.0" layoutX="16.0" layoutY="-71.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="-18.45172119140625" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="-71.0">
+      <ImageView fx:id="img" fitHeight="699.0" fitWidth="810.0" layoutX="16.0" layoutY="-84.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="-15.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="-84.0">
          <image>
             <Image url="@../img/GameBoard.png" />
          </image>
