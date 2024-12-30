@@ -14,9 +14,10 @@
             "type": "java",
             "name": "CodeBreaker",
             "request": "launch",
-            "mainClass": "CodeBreaker",
+            "mainClass": "codebreaker.CodeBreaker",
             "projectName": "Final Project - Code Breaker_83c7cf75",
             "vmArgs": "--module-path \"C:/Java/javafx-sdk-23.0.1/lib\" --add-modules javafx.controls,javafx.fxml"
+
         }
     ]
 }
