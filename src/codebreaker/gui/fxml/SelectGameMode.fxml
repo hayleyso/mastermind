@@ -6,18 +6,18 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="470.0" prefWidth="841.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="codebreaker.controllers.SelectGameMode">
+<AnchorPane layoutY="55.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="841.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="codebreaker.controllers.SelectGameMode">
    <children>
-      <ImageView fitHeight="470.0" fitWidth="850.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <ImageView fx:id="img" fitHeight="470.0" fitWidth="810.0" layoutX="13.0" layoutY="144.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.375" AnchorPane.leftAnchor="13.0" AnchorPane.rightAnchor="18.0" AnchorPane.topAnchor="206.0">
          <image>
             <Image url="@../img/SelectGameMode.png" />
          </image>
       </ImageView>
-      <Button layoutX="306.0" layoutY="264.0" mnemonicParsing="false" onAction="#onGuessModeClick" text="GUESS">
+      <Button layoutX="312.0" layoutY="464.0" mnemonicParsing="false" onAction="#onGuessModeClick" text="GUESS">
          <font>
             <Font name="SansSerif Bold" size="12.0" />
          </font></Button>
-      <Button layoutX="447.0" layoutY="264.0" mnemonicParsing="false" onAction="#onCreateModeClick" text="CREATE">
+      <Button layoutX="449.0" layoutY="464.0" mnemonicParsing="false" onAction="#onCreateModeClick" text="CREATE">
          <font>
             <Font name="SansSerif Bold" size="12.0" />
          </font>

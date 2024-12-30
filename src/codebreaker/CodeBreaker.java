@@ -13,6 +13,9 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class CodeBreaker extends Application {
+    public final static int NUM_COLORS = 6;
+    public final static int CODE_LENGTH = 4;
+    public final static int MAX_GUESSES = 10;
 
     @Override
     public void start(Stage primaryStage) throws IOException {
@@ -21,10 +24,10 @@ public class CodeBreaker extends Application {
         Scene scene = new Scene(root);
 
         primaryStage.setTitle("Code Breaker");
+        primaryStage.centerOnScreen();
         primaryStage.setScene(scene);
         primaryStage.show();
-        primaryStage.setResizable(true);
-        
+        primaryStage.setResizable(false);
         
     }
 
