@@ -13,9 +13,9 @@
             <Image url="@../../gui/img/StartMenu.png" />
          </image>
       </ImageView>
-      <Button layoutX="389.0" layoutY="264.0" mnemonicParsing="false" onAction="#onPlayBtnClick" prefHeight="18.0" prefWidth="57.0" style="-fx-background-color: ivory;" text="Play" textFill="#171717">
+      <Button layoutX="362.0" layoutY="257.0" mnemonicParsing="false" onAction="#onPlayBtnClick" prefHeight="36.0" prefWidth="112.0" style="-fx-background-color: ivory;" text="PLAY!" textFill="#171717">
          <font>
-            <Font name="Trebuchet MS" size="15.0" />
+            <Font name="SansSerif Bold" size="18.0" />
          </font>
       </Button>
    </children>

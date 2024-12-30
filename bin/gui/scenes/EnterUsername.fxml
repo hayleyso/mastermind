@@ -5,6 +5,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="470.0" prefWidth="841.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.EnterUsername">
    <children>
@@ -13,7 +14,10 @@
             <Image url="@../../gui/img/EnterUsername.png" />
          </image>
       </ImageView>
-      <TextField layoutX="341.0" layoutY="278.0" prefHeight="25.0" prefWidth="150.0" promptText="Enter your username" />
-      <Button layoutX="400.0" layoutY="321.0" mnemonicParsing="false" onAction="#onOKBtnClick" text="OK" />
+      <TextField fx:id="usernameField" layoutX="341.0" layoutY="278.0" prefHeight="25.0" prefWidth="150.0" />
+      <Button fx:id="submit" layoutX="387.0" layoutY="320.0" mnemonicParsing="false" onAction="#submit" text="SUBMIT">
+         <font>
+            <Font name="SansSerif Bold" size="12.0" />
+         </font></Button>
    </children>
 </AnchorPane>

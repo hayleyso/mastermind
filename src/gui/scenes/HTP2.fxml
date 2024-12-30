@@ -4,6 +4,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="470.0" prefWidth="841.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.HTP2">
    <children>
@@ -12,6 +13,10 @@
             <Image url="@../../gui/img/HTP2.png" />
          </image>
       </ImageView>
-      <Button layoutX="397.0" layoutY="328.0" mnemonicParsing="false" onAction="#onNextBtnClick" text="Next" />
+      <Button layoutX="393.0" layoutY="338.0" mnemonicParsing="false" onAction="#onNextBtnClick" text="NEXT">
+         <font>
+            <Font name="SansSerif Bold" size="12.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

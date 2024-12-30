@@ -12,8 +12,6 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class CodeBreaker extends Application {
-    final int WINDOW_WIDTH = 12000;
-    final int WINDOW_HEIGHT = 900;
 
     @Override
     public void start(Stage primaryStage) throws IOException {
@@ -24,6 +22,7 @@ public class CodeBreaker extends Application {
         primaryStage.setTitle("Code Breaker");
         primaryStage.setScene(scene);
         primaryStage.show();
+        primaryStage.setResizable(false);
         
     }
 

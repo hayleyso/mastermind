@@ -13,7 +13,7 @@ public class HTP2 {
 
     @FXML
     void onNextBtnClick(ActionEvent event) throws IOException {
-        Parent gameOverviewparent = FXMLLoader.load(getClass().getResource("/gui/scenes/DifficultyLevelSelector.fxml"));
+        Parent gameOverviewparent = FXMLLoader.load(getClass().getResource("/gui/scenes/SelectGameMode.fxml"));
         Scene gameOverviewScene = new Scene(gameOverviewparent);
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         
