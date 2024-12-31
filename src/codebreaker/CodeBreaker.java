@@ -24,7 +24,6 @@ public class CodeBreaker extends Application {
         Scene scene = new Scene(root);
 
         primaryStage.setTitle("Code Breaker");
-        primaryStage.centerOnScreen();
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.setResizable(false);

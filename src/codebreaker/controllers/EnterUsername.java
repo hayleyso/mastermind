@@ -25,7 +25,6 @@ public class EnterUsername {
     public void initialize() {
         submit.setDisable(true);
         usernameField.textProperty().addListener((_, _, newValue) -> {
-            // disable submit button if username is empty or less than 4 characters
             if (newValue.isEmpty() || newValue.length() < 4) {
                 submit.setDisable(true);
             } else {
