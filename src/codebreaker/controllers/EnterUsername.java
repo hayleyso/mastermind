@@ -1,7 +1,6 @@
 package codebreaker.controllers;
 
 import java.io.*;
-import java.lang.classfile.Label;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
