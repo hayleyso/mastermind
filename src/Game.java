@@ -69,11 +69,14 @@ public class Game {
         // Amount of white answers and the numbers corresponding to them
         int amountOfWhite = 0;
         int[] whiteNums = {0, 0, 0, 0};
+        int[] blackNums = {0, 0, 0, 0};
+        boolean alreadyAccounted = false;
 
         // Adding black results and keeping track of white results
         for (int i = 0; i < CODE_LENGTH; i++) {
             if (guess[i] == code[i]) {
                 result[i] = 'B';
+                blackNums[i] = guess[i];
 
                 for (int j = 0; j < amountOfWhite; j++) {
                     if (guess[i] == whiteNums[j]) {
@@ -83,10 +86,21 @@ public class Game {
                 }
             } else {
                 for (int j = 0; j < CODE_LENGTH; j++) {
-                    if (guess[i] == code[j]) {
-                        whiteNums[amountOfWhite] = guess[i];
-                        amountOfWhite++;
+                    if (guess[i] == blackNums[j]) {
+                        alreadyAccounted = true;
                         break;
+                    }
+                }
+
+                if (alreadyAccounted) {
+                    alreadyAccounted = false;
+                } else {
+                    for (int j = 0; j < CODE_LENGTH; j++) {
+                        if (guess[i] == code[j]) {
+                            whiteNums[amountOfWhite] = guess[i];
+                            amountOfWhite++;
+                            break;
+                        }
                     }
                 }
             }
