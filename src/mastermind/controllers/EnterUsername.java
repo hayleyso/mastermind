@@ -37,7 +37,7 @@ public class EnterUsername {
         submit.setDisable(true);
         username = usernameField.getText();
         System.out.println(username);
-        Parent gameOverviewParent = FXMLLoader.load(getClass().getResource("/codebreaker/gui/fxml/GameOverview.fxml"));
+        Parent gameOverviewParent = FXMLLoader.load(getClass().getResource("/mastermind/gui/fxml/GameOverview.fxml"));
         Scene gameOverviewScene = new Scene(gameOverviewParent);
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
             

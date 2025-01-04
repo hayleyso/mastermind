@@ -1,11 +1,6 @@
 package mastermind.core;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
-import java.util.function.Function;
-
+import java.util.*;
 import mastermind.Mastermind;
 
 public class Code {
@@ -30,6 +25,7 @@ public class Code {
         }
         this.code = codeBuilder;
     }
+
     /**
      * 
      * @param index
@@ -47,27 +43,6 @@ public class Code {
         return new ArrayList<>(code); 
     }
 
-
-    /**
-     * 
-     * @param filters
-     * @return
-     */
-    public static Code generateRandomCode(List<Function<Code, Boolean>> filters) {
-        final Random random = new Random();
-        while (true) {
-            ArrayList<Integer> codeBuilder = new ArrayList<>(Mastermind.CODE_LENGTH);
-            for (int i = 0; i < Mastermind.CODE_LENGTH; ++i) {
-                final int randomColor = random.nextInt(Mastermind.NUM_COLORS);
-                codeBuilder.add(randomColor);
-            }
-            final Code generatedCode = new Code(codeBuilder);
-            boolean satisfiesAllFilters = filters.stream().allMatch(filter -> filter.apply(generatedCode));
-            if (satisfiesAllFilters) {
-                return generatedCode;
-            }
-        }
-    }
 
     public HashMap<Color, Integer> getOccurrences() {
         HashMap<Color, Integer> occurrences = new HashMap<>();
@@ -92,5 +67,16 @@ public class Code {
     public String toString() {
         return code.toString(); 
     }
+
+    public Code generateRandomCode() {
+        Random random = new Random();
+        List<Integer> codeList = new ArrayList<>(Mastermind.CODE_LENGTH);
+        for (int i = 0; i < codeList.size(); i++) {
+            codeList.add(random.nextInt(Color.values().length));
+        }
+        return new Code(codeList);
+    }
+
+   
 }
 

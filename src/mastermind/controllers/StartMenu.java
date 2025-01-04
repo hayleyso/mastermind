@@ -13,7 +13,7 @@ public class StartMenu {
    
     @FXML
     void onPlayBtnClick(ActionEvent event) throws IOException {
-        Parent enterUsernameParent = FXMLLoader.load(getClass().getResource("/codebreaker/gui/fxml/EnterUsername.fxml"));
+        Parent enterUsernameParent = FXMLLoader.load(getClass().getResource("/mastermind/gui/fxml/EnterUsername.fxml"));
         Scene enterUsernameScene = new Scene(enterUsernameParent);
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         

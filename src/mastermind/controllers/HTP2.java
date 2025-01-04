@@ -13,7 +13,7 @@ public class HTP2 {
 
     @FXML
     void onNextBtnClick(ActionEvent event) throws IOException {
-        Parent selectGameModeParent = FXMLLoader.load(getClass().getResource("/codebreaker/gui/fxml/SelectGameMode.fxml"));
+        Parent selectGameModeParent = FXMLLoader.load(getClass().getResource("/mastermind/gui/fxml/SelectGameMode.fxml"));
         Scene selectGameModeScene = new Scene(selectGameModeParent);
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         

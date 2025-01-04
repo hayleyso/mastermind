@@ -13,7 +13,7 @@ public class HTP1 {
 
     @FXML
     void onNextBtnClick(ActionEvent event) throws IOException {
-        Parent HTP2Parent = FXMLLoader.load(getClass().getResource("/codebreaker/gui/fxml/HTP2.fxml"));
+        Parent HTP2Parent = FXMLLoader.load(getClass().getResource("/mastermind/gui/fxml/HTP2.fxml"));
         Scene HTP2Scene = new Scene(HTP2Parent);
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         

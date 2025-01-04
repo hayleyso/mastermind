@@ -11,24 +11,31 @@ import javafx.stage.Stage;
 
 public class SelectDifficultyLevel {
 
+  
     @FXML
     void onEasyLevelClick(ActionEvent event) throws IOException {
-        Parent gameBoardParent = FXMLLoader.load(getClass().getResource("/codebreaker/gui/fxml/GameBoard.fxml"));
+       loadGameBoard(event);
+    }
+
+    @FXML
+    void onHardLevelClick(ActionEvent event) throws IOException {
+        loadGameBoard(event);
+    }
+
+    @FXML
+    void onMediumLevelClick(ActionEvent event) throws IOException {
+        loadGameBoard(event);
+
+    }
+
+    private void loadGameBoard(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/mastermind/gui/fxml/GameBoard.fxml"));
+        Parent gameBoardParent = loader.load();
         Scene gameBoardScene = new Scene(gameBoardParent);
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         
         window.setScene(gameBoardScene);
         window.show();
-    }
-
-    @FXML
-    void onHardLevelClick(ActionEvent event) {
-
-    }
-
-    @FXML
-    void onMediumLevelClick(ActionEvent event) {
-
     }
 
 }

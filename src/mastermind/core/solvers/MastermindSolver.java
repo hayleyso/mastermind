@@ -1,5 +1,9 @@
 package mastermind.core.solvers;
 
-public class MastermindSolver {
+public abstract class MastermindSolver {
+    public enum Status {
+        WIN, LOSE, CONTINUE
+    }
+
     
 }
