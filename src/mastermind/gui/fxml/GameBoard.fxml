@@ -23,12 +23,12 @@
       <Button fx:id="greenButton" layoutX="290.0" layoutY="47.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="29.0" style="-fx-background-color: seagreen;" />
       <Button fx:id="resetButton" layoutX="286.0" layoutY="291.0" mnemonicParsing="false" prefHeight="16.0" prefWidth="22.0" style="-fx-background-color: white" />
       <Button fx:id="checkButton" layoutX="286.0" layoutY="341.0" mnemonicParsing="false" prefHeight="15.0" prefWidth="22.0" style="-fx-background-color: white" />
-      <ImageView fitHeight="37.0" fitWidth="33.0" layoutX="291.0" layoutY="296.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="28.0" fitWidth="25.0" layoutX="296.0" layoutY="300.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../img/icons/reset.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="37.0" fitWidth="33.0" layoutX="292.0" layoutY="347.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="25.0" fitWidth="22.0" layoutX="297.0" layoutY="353.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../img/icons/check.png" />
          </image>

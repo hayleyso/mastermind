@@ -2,7 +2,6 @@ package mastermind.controllers;
 
 import mastermind.*;
 import mastermind.core.*;
-import mastermind.core.Code;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
@@ -31,13 +30,12 @@ public class GameBoard {
     private GridPane guessGrid;
 
     private Code actualCode;
-
     private int currentRow = 0; 
     private int currentCol = 0; 
 
     public void initialize() {
         setUpButtons();
-        
+        clearGrid(); 
     }
 
     private void setUpButtons() {
@@ -55,12 +53,12 @@ public class GameBoard {
         checkButton.setMinSize(44, 44);
         checkButton.setMaxSize(44, 44);
 
-        greenButton.setOnAction(event -> addColor(Code.Color.Green));
-        redButton.setOnAction(event -> addColor(Code.Color.Red));
-        blueButton.setOnAction(event -> addColor(Code.Color.Blue));
-        yellowButton.setOnAction(event -> addColor(Code.Color.Yellow));
-        orangeButton.setOnAction(event -> addColor(Code.Color.Orange));
-        purpleButton.setOnAction(event -> addColor(Code.Color.Purple));
+        greenButton.setOnAction(event -> addColor(Code.Color.GREEN));
+        redButton.setOnAction(event -> addColor(Code.Color.RED));
+        blueButton.setOnAction(event -> addColor(Code.Color.BLUE));
+        yellowButton.setOnAction(event -> addColor(Code.Color.YELLOW));
+        orangeButton.setOnAction(event -> addColor(Code.Color.ORANGE));
+        purpleButton.setOnAction(event -> addColor(Code.Color.PURPLE));
 
         checkButton.setOnAction(event -> submitSelection());
         resetButton.setOnAction(event -> resetSelection());
@@ -85,29 +83,37 @@ public class GameBoard {
     private void displayColors(Code.Color color) {
         Circle dot = new Circle(12);
         dot.setFill(getColorFromCode(color));
+        checkButton.setShape(new Circle(20)); 
+        checkButton.setMinSize(44, 44); 
+        checkButton.setMaxSize(44, 44); 
         
         guessGrid.add(dot, currentCol, currentRow); 
     }
 
     private Color getColorFromCode(Code.Color color) {
         switch (color) {
-            case Green: return Color.SEAGREEN;
-            case Red: return Color.CRIMSON;
-            case Blue: return Color.ROYALBLUE;
-            case Yellow: return Color.GOLD;
-            case Orange: return Color.DARKORANGE;
-            case Purple: return Color.MEDIUMPURPLE;
+            case GREEN: return Color.SEAGREEN;
+            case RED: return Color.CRIMSON;
+            case BLUE: return Color.ROYALBLUE;
+            case YELLOW: return Color.GOLD;
+            case ORANGE: return Color.DARKORANGE;
+            case PURPLE: return Color.MEDIUMPURPLE;
             default: return Color.TRANSPARENT; 
         }
     }
 
     private void submitSelection() {
-        
+       
     }
 
     private void resetSelection() {
-        currentRow = 0; 
-        currentCol = 0; 
-        guessGrid.getChildren().clear();
+        clearGrid();
+        currentRow = 0;
+        currentCol = 0;
+    }
+
+
+    private void clearGrid() {
+        guessGrid.getChildren().clear(); 
     }
 }
