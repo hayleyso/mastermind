@@ -8,12 +8,12 @@
 
 <AnchorPane layoutY="55.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="841.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mastermind.controllers.HTP1">
    <children>
-      <ImageView fx:id="img" fitHeight="470.0" fitWidth="810.0" layoutX="13.0" layoutY="144.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.375" AnchorPane.leftAnchor="13.0" AnchorPane.rightAnchor="18.0" AnchorPane.topAnchor="206.0">
+      <ImageView fx:id="img" fitHeight="470.0" fitWidth="810.0" layoutX="13.0" layoutY="72.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="72.375" AnchorPane.leftAnchor="13.0" AnchorPane.rightAnchor="18.0" AnchorPane.topAnchor="72.0">
          <image>
             <Image url="@../img/background/HTP1.png" />
          </image>
       </ImageView>
-      <Button layoutX="396.0" layoutY="516.0" mnemonicParsing="false" onAction="#onNextBtnClick" text="NEXT">
+      <Button layoutX="396.0" layoutY="391.0" mnemonicParsing="false" onAction="#onNextBtnClick" text="NEXT">
          <font>
             <Font name="SansSerif Bold" size="12.0" />
          </font>

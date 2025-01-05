@@ -11,21 +11,25 @@ import javafx.stage.Stage;
 
 public class SelectDifficultyLevel {
 
+    private String difficultyLevel;
   
     @FXML
     void onEasyLevelClick(ActionEvent event) throws IOException {
-       loadGameBoard(event);
-    }
-
-    @FXML
-    void onHardLevelClick(ActionEvent event) throws IOException {
+        difficultyLevel = "easy";
         loadGameBoard(event);
     }
 
     @FXML
     void onMediumLevelClick(ActionEvent event) throws IOException {
+        difficultyLevel = "medium";
         loadGameBoard(event);
 
+    }
+
+    @FXML
+    void onHardLevelClick(ActionEvent event) throws IOException {
+        difficultyLevel = "hard";
+        loadGameBoard(event);
     }
 
     private void loadGameBoard(ActionEvent event) throws IOException {

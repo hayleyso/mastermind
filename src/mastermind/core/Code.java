@@ -48,11 +48,15 @@ public class Code {
     public Color getColor(final int index) {
         return code.get(index);
     }
-    
-    /**
-     * 
-     * @return
-     */
+
+    public static List<Color> getColorFromCode(List<Integer> codeList) {
+        List<Color> colorList = new ArrayList<>(codeList.size());
+        for (int color : codeList) {
+            colorList.add(Color.fromIndex(color));
+        }
+        return colorList;
+    }
+
     public ArrayList<Color> getColors() {
         return new ArrayList<>(code); 
     }
@@ -100,7 +104,7 @@ public class Code {
         return code.toString(); 
     }
 
-    public Code generateRandomCode() {
+    public static Code generateRandomCode() {
         Random random = new Random();
         List<Integer> codeList = new ArrayList<>(Mastermind.CODE_LENGTH);
         for (int i = 0; i < codeList.size(); i++) {
