@@ -1,19 +1,17 @@
 package mastermind.controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import mastermind.Mastermind;
 import mastermind.core.Code;
 import mastermind.core.Response;
 import mastermind.core.solvers.MastermindAlgorithm;
+import mastermind.utils.SceneLoader;
 
 import java.io.IOException;
 import java.util.*;
@@ -300,12 +298,8 @@ public class GameBoard {
 
 
     @FXML
-    void onNextBtnClick() throws IOException {
-        Parent GameOverParent = FXMLLoader.load(getClass().getResource("/mastermind/gui/fxml/GameOver.fxml"));
-        Scene HTP2Scene = new Scene(GameOverParent);
-        Stage window = (Stage) greenButton.getScene().getWindow();        
-        window.setScene(HTP2Scene);
-        window.show();
+    void onNextBtnClick(ActionEvent event) throws IOException {
+        SceneLoader.loadPage(event, "/mastermind/gui/fxml/GameOver.fxml");
     }
 
 }

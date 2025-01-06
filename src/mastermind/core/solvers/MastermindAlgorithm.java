@@ -1,7 +1,5 @@
 package mastermind.core.solvers;
 
-import java.util.Set;
-
 import javafx.util.Pair;
 import mastermind.core.Code;
 import mastermind.core.Response;

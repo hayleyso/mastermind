@@ -3,13 +3,9 @@ package mastermind.controllers;
 import java.io.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
+import mastermind.utils.SceneLoader;
 
 public class EnterUsername {
     private String username;
@@ -36,11 +32,6 @@ public class EnterUsername {
     public void submit(ActionEvent event) throws IOException {
         submit.setDisable(true);
         username = usernameField.getText();
-        Parent parent = FXMLLoader.load(getClass().getResource("/mastermind/gui/fxml/GameOverview.fxml"));
-        Scene scene = new Scene(parent);
-        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-            
-        window.setScene(scene);
-        window.show();
+        SceneLoader.loadPage(event, "/mastermind/gui/fxml/GameOverview.fxml");
     }
 }
