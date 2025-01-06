@@ -104,13 +104,13 @@ public class Code {
     //     return code.toString();
     // }
 
-    // public static Code generateRandomCode() {
-    //     Random random = new Random();
-    //     List<Integer> codeList = new ArrayList<>(Mastermind.CODE_LENGTH);
-    //     for (int i = 0; i < codeList.size(); i++) {
-    //         codeList.add(random.nextInt(Color.values().length));
-    //     }
-    //     return new Code(codeList);
-    // }
+    public static Code generateRandomCode() {
+        List<Integer> codeList = new ArrayList<>();
+        Random random = new Random();
+        for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
+            codeList.add(random.nextInt(Color.values().length));
+        }
+        return new Code(codeList);
+    }
 
 }

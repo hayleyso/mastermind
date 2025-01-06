@@ -1,6 +1,8 @@
 package mastermind.core.solvers;
 
 import java.util.*;
+
+import javafx.util.Pair;
 import mastermind.Mastermind;
 import mastermind.core.*;
 
@@ -12,6 +14,7 @@ public class DonaldKnuthAlgorithm extends MastermindAlgorithm {
        initializePossibleCodes();
     }
 
+    // 1296 possible codes
     public void initializePossibleCodes() {
         final int possibilities = (int) Math.pow(Mastermind.NUM_COLORS, Mastermind.CODE_LENGTH);
         possibleCodes = new HashSet<>(possibilities);
@@ -38,6 +41,12 @@ public class DonaldKnuthAlgorithm extends MastermindAlgorithm {
             currentGuess = new Code(Arrays.asList(0, 0, 1, 1)); 
         }
         return currentGuess;
+    }
+
+    @Override
+    public Pair<Status, Code> guess(Response response) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'guess'");
     }
 
     

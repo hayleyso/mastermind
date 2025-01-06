@@ -1,6 +1,5 @@
 package mastermind.controllers;
 
-import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -81,7 +80,7 @@ public class GameBoard {
         setUpButtons();
 
         if ("guess".equals(gameMode)) {
-            generateRandomCode();
+            generatedCode = Code.generateRandomCode();
             hideCode();
             text.setText("Please enter your guess.");
         } 
@@ -90,14 +89,6 @@ public class GameBoard {
         }
 
         startTime = System.currentTimeMillis();
-    }
-
-    private void generateRandomCode() {
-        List<Integer> codeList = new ArrayList<>();
-        for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
-            codeList.add(new Random().nextInt(Code.Color.values().length));
-        }
-        generatedCode = new Code(codeList);
     }
 
     public void setGameMode(String gameMode) {
