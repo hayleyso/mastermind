@@ -233,31 +233,59 @@ public class GameBoard {
         currentGuessColumn = 0;
     }    
     
+    // private void displayResponse(Response response) {
+    //     List<String> pegColors = response.getPegColors();
+    
+    //     for (int i = 0; i < pegColors.size(); i++) {
+    //         Circle peg = new Circle(4);
+    
+    //         if ("BLACK".equals(pegColors.get(i))) {
+    //             peg.setFill(Color.BLACK);
+    //             peg.setStroke(Color.BLACK);
+    //             peg.setStrokeWidth(1.5);
+    //         } else if ("WHITE".equals(pegColors.get(i))) {
+    //             peg.setFill(Color.WHITE);
+    //             peg.setStroke(Color.BLACK);
+    //             peg.setStrokeWidth(1.5);
+    //         } else {
+    //             continue; 
+    //         }
+    //         int columnOffset = i % 2; 
+    //         int rowOffset = currentResponseRow + (i / 2);  
+    
+    //         responseGrid.add(peg, columnOffset, rowOffset);
+    //     }
+    //     currentResponseRow += (pegColors.size() + 1) / 2;
+    // }    
+
     private void displayResponse(Response response) {
         List<String> pegColors = response.getPegColors();
+        List<Circle> pegs = new ArrayList<>();
     
-        for (int i = 0; i < pegColors.size(); i++) {
-            Circle peg = new Circle(4);
-    
-            if ("BLACK".equals(pegColors.get(i))) {
-                peg.setFill(Color.BLACK);
+        // Create pegs based on the response
+        for (String color : pegColors) {
+            if ("BLACK".equals(color) || "WHITE".equals(color)) {
+                Circle peg = new Circle(4);
+                peg.setFill("BLACK".equals(color) ? Color.BLACK : Color.WHITE);
                 peg.setStroke(Color.BLACK);
                 peg.setStrokeWidth(1.5);
-            } else if ("WHITE".equals(pegColors.get(i))) {
-                peg.setFill(Color.WHITE);
-                peg.setStroke(Color.BLACK);
-                peg.setStrokeWidth(1.5);
-            } else {
-                continue; 
+                pegs.add(peg);
             }
+        }
     
-            int columnOffset = i % 2; 
-            int rowOffset = currentResponseRow + (i / 2);  
+        Collections.shuffle(pegs);
+    
+        int pegIndex = 0;
+        for (Circle peg : pegs) {
+            int columnOffset = pegIndex % 2; 
+            int rowOffset = currentResponseRow + (pegIndex / 2);  
     
             responseGrid.add(peg, columnOffset, rowOffset);
+            pegIndex++;
         }
-        currentResponseRow += (pegColors.size() + 1) / 2;
-    }    
+    
+        currentResponseRow += 2;
+    }
     
     private void submitCode() {
         if (currentCreateColumn < Mastermind.CODE_LENGTH) {
