@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import mastermind.Mastermind;
 import mastermind.core.Code;
 import mastermind.core.Response;
+import mastermind.core.solvers.MastermindAlgorithm;
 
 import java.io.IOException;
 import java.util.*;
@@ -54,7 +55,10 @@ public class GameBoard {
     private String gameMode;
     private Code generatedCode;
 
-    Timeline timeline = new Timeline();
+    private MastermindAlgorithm solver;
+
+    private long startTime;
+    private long endTime;
 
     public void initialize() {
         guessGrid.getChildren().clear();
@@ -84,6 +88,8 @@ public class GameBoard {
         if ("create".equals(gameMode)) {
             text.setText("Please create a code.");
         }
+
+        startTime = System.currentTimeMillis();
     }
 
     private void generateRandomCode() {
@@ -194,7 +200,6 @@ public class GameBoard {
             text.setText("Please enter four colors.");
             return;
         }
-
         List<Integer> guessList = new ArrayList<>();
         
         for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
@@ -206,7 +211,6 @@ public class GameBoard {
                     : dot.getFill().equals(Color.DARKORANGE) ? Code.Color.ORANGE.ordinal()
                     : dot.getFill().equals(Color.MEDIUMPURPLE) ? Code.Color.PURPLE.ordinal() : -1);
         }
-        
         Code userGuess = new Code(guessList);
         Response response = new Response(generatedCode, userGuess);
         displayResponse(response);
@@ -215,18 +219,20 @@ public class GameBoard {
             text.setText("You win!");
             revealCode();
             nextButton.setVisible(true);
+            endTime = System.currentTimeMillis();
+            long timeTaken = endTime - startTime;
         } else {
             currentGuessRow++;
             currentGuessColumn = 0;
            
-            if (response.getResponse().getKey() == 0) {
-                text.setText("None correct. " + (Mastermind.NUM_GUESSES - currentGuessRow) + " attempts left.");
-            } else if (currentGuessRow == Mastermind.NUM_GUESSES - 1) {
-                text.setText("1 attempt left");
+            if (response.getResponse().getKey() == 0 && response.getResponse().getValue() == 0) {
+                text.setText("None correct. " + (Mastermind.NUM_GUESSES - currentGuessRow) + " attempt" + 
+                             ((Mastermind.NUM_GUESSES - currentGuessRow) != 1 ? "s" : "") + " left.");
             } else {
-                text.setText((Mastermind.NUM_GUESSES - currentGuessRow) + " attempts left.");
-            } 
-
+                int attemptsLeft = Mastermind.NUM_GUESSES - currentGuessRow;
+                text.setText(attemptsLeft + " attempt" + (attemptsLeft != 1 ? "s" : "") + " left.");
+            }
+    
             if (currentGuessRow >= Mastermind.NUM_GUESSES) {
                 text.setText("You lose.");
                 revealCode();
@@ -234,7 +240,7 @@ public class GameBoard {
             }
         }
         currentGuessColumn = 0;
-    }
+    }    
     
     private void displayResponse(Response response) {
         List<String> pegColors = response.getPegColors();
