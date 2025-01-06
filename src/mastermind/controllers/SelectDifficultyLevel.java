@@ -10,9 +10,8 @@ public class SelectDifficultyLevel {
   
     @FXML
     void onEasyLevelClick(ActionEvent event) throws IOException {
-        difficultyLevel = "easy";
-        // gameBoard.setDifficultyLevel(difficultyLevel);
-        SceneLoader.loadPage(event, "/mastermind/gui/fxml/GameBoard.fxml");
+        GameBoard gameBoard = SceneLoader.loadPage(event, "/mastermind/gui/fxml/GameBoard.fxml");
+        gameBoard.setSolver(difficultyLevel);
     }
 
     @FXML

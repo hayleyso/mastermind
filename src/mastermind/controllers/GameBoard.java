@@ -51,7 +51,6 @@ public class GameBoard {
 
     private String gameMode;
     private Code generatedCode;
-
     private MastermindAlgorithm solver;
 
     private long startTime;
@@ -92,6 +91,9 @@ public class GameBoard {
     public void setGameMode(String gameMode) {
         this.gameMode = gameMode;
         initialize();
+    }
+
+    public void setSolver(String difficultyLevel) {
     }
 
     private void setUpButtons() {
@@ -205,7 +207,7 @@ public class GameBoard {
         displayResponse(response);
     
         if (response.getResponse().getKey() == Mastermind.CODE_LENGTH) {
-            text.setText("You win!");
+            text.setText("Congratulations! It took you " + (currentGuessRow + 1) + " guesses.");
             revealCode();
             nextButton.setVisible(true);
             endTime = System.currentTimeMillis();
@@ -223,7 +225,7 @@ public class GameBoard {
             }
     
             if (currentGuessRow >= Mastermind.NUM_GUESSES) {
-                text.setText("You lose.");
+                text.setText("I'm sorry you lose.");
                 revealCode();
                 nextButton.setVisible(true);
             }
@@ -300,6 +302,13 @@ public class GameBoard {
     @FXML
     void onNextBtnClick(ActionEvent event) throws IOException {
         SceneLoader.loadPage(event, "/mastermind/gui/fxml/GameOver.fxml");
+    }
+
+    private void formatTime(final long timeTaken) {
+        // display 0:00
+        long minutes = timeTaken / 60000;
+        long seconds = (timeTaken % 60000) / 1000;
+        String time = String.format("%d:%02d", minutes, seconds);
     }
 
 }
