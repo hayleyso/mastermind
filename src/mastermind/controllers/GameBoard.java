@@ -1,13 +1,20 @@
 package mastermind.controllers;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import mastermind.Mastermind;
 import mastermind.core.Code;
 import mastermind.core.Response;
+
+import java.io.IOException;
 import java.util.*;
 
 public class GameBoard {
@@ -33,19 +40,50 @@ public class GameBoard {
     protected GridPane createGrid;
     @FXML
     protected GridPane responseGrid;
+    @FXML
+    protected Text text;
 
-    private int currentGuessRow = 0;
-    private int currentGuessColumn = 0;
-    private int currentCreateColumn = 0;
+    private int currentGuessRow;
+    private int currentGuessColumn;
+    private int currentCreateColumn;
+    private int currentResponseRow;
+
     private String gameMode;
     private Code generatedCode;
 
     public void initialize() {
-        clearGrids();
+        guessGrid.getChildren().clear();
+        createGrid.getChildren().clear();
+        responseGrid.getChildren().clear();
+
+        for (int i=0; i<responseGrid.getRowCount(); i++) {
+            for (int j=0; j<responseGrid.getColumnCount(); j++) {
+                Circle peg = new Circle(4);
+                peg.setFill(Color.PALETURQUOISE);
+                responseGrid.add(peg, j, i);
+            }
+        }
+
+        currentGuessRow = 0;
+        currentGuessColumn = 0;
+        currentCreateColumn = 0;
+        currentResponseRow = 0;
+
         setUpButtons();
+
         if ("guess".equals(gameMode)) {
+            generateRandomCode();
             hideCode();
+            // text.setText("Please enter your guess.");
         } 
+    }
+
+    private void generateRandomCode() {
+        List<Integer> codeList = new ArrayList<>();
+        for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
+            codeList.add(new Random().nextInt(Code.Color.values().length));
+        }
+        generatedCode = new Code(codeList);
     }
 
     public void setGameMode(String gameMode) {
@@ -56,7 +94,7 @@ public class GameBoard {
     private void setUpButtons() {
         Button[] colorButtons = { greenButton, redButton, blueButton, yellowButton, orangeButton, purpleButton };
         for (Button button : colorButtons) {
-            button.setShape(new Circle(15));
+            button.setShape(new Circle(16));
             button.setMinSize(30, 30);
             button.setMaxSize(30, 30);
         }
@@ -107,7 +145,7 @@ public class GameBoard {
     }
 
     private void displayColors(Code.Color color, GridPane grid, int col, int row) {
-        Circle dot = new Circle(14);
+        Circle dot = new Circle(12);
         dot.setFill(getColorFromCode(color));
         grid.add(dot, col, row);
     }
@@ -142,26 +180,85 @@ public class GameBoard {
     }
 
     private void submitGuess() {
+        if (currentGuessColumn < Mastermind.CODE_LENGTH) {
+            // text.setText("Please enter four colors.");
+            return;
+        }
+
         List<Integer> guessList = new ArrayList<>();
+        
         for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
             Circle dot = (Circle) guessGrid.getChildren().get(currentGuessRow * Mastermind.CODE_LENGTH + i);
             guessList.add(dot.getFill().equals(Color.SEAGREEN) ? Code.Color.GREEN.ordinal()
                     : dot.getFill().equals(Color.CRIMSON) ? Code.Color.RED.ordinal()
-                            : dot.getFill().equals(Color.ROYALBLUE) ? Code.Color.BLUE.ordinal()
-                                    : dot.getFill().equals(Color.GOLD) ? Code.Color.YELLOW.ordinal()
-                                            : dot.getFill().equals(Color.DARKORANGE) ? Code.Color.ORANGE.ordinal()
-                                                    : dot.getFill().equals(Color.MEDIUMPURPLE)
-                                                            ? Code.Color.PURPLE.ordinal()
-                                                            : -1);
+                    : dot.getFill().equals(Color.ROYALBLUE) ? Code.Color.BLUE.ordinal()
+                    : dot.getFill().equals(Color.GOLD) ? Code.Color.YELLOW.ordinal()
+                    : dot.getFill().equals(Color.DARKORANGE) ? Code.Color.ORANGE.ordinal()
+                    : dot.getFill().equals(Color.MEDIUMPURPLE) ? Code.Color.PURPLE.ordinal() : -1);
         }
+        
         Code userGuess = new Code(guessList);
-
         Response response = new Response(generatedCode, userGuess);
         displayResponse(response);
+    
+        if (response.getResponse().getKey() == Mastermind.CODE_LENGTH) {
+            // text.setText("You win!");
+        } else {
+            currentGuessRow++;
+            currentGuessColumn = 0;
+            if (currentGuessRow == Mastermind.NUM_GUESSES - 1) {
+                // text.setText("1 more attempt");
+            } else {
+                // text.setText((Mastermind.NUM_GUESSES - currentGuessRow) + " attempts left.");
+            } 
+            text.setText((currentGuessRow + 1) + " attempts left.");
 
-        currentGuessRow++;
+            if (currentGuessRow >= Mastermind.NUM_GUESSES) {
+                // text.setText("You lose.");
+                revealCode();
+                try {
+                    loadGameOverPage();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        
+        currentGuessColumn = 0;
     }
-
+    
+    private void displayResponse(Response response) {
+        List<String> pegColors = response.getPegColors();
+    
+        for (int i = 0; i < pegColors.size(); i++) {
+            Circle peg = new Circle(4);
+    
+            if ("BLACK".equals(pegColors.get(i))) {
+                peg.setFill(Color.BLACK);
+                peg.setStroke(Color.BLACK);
+                peg.setStrokeWidth(1.5);
+            } else if ("WHITE".equals(pegColors.get(i))) {
+                peg.setFill(Color.WHITE);
+                peg.setStroke(Color.BLACK);
+                peg.setStrokeWidth(1.5);
+            } else {
+                continue; 
+            }
+    
+            int columnOffset = i % 2; 
+            int rowOffset = currentResponseRow + (i / 2);  
+    
+            responseGrid.add(peg, columnOffset, rowOffset);
+        }
+    
+        currentResponseRow += (pegColors.size() + 1) / 2;
+    
+        if (response.getResponse().getKey() == Mastermind.CODE_LENGTH) {
+            revealCode();
+            // text.setText("You win!");
+        }
+    }    
+    
     private void submitCode() {
         List<Integer> codeList = new ArrayList<>();
         for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
@@ -177,15 +274,7 @@ public class GameBoard {
         }
         Code userCode = new Code(codeList);
     }
-
-    private void displayResponse(Response response) {
-
-    }
-
-    private void clearGrids() {
-        guessGrid.getChildren().clear();
-        createGrid.getChildren().clear();
-    }
+    
 
     private void hideCode() {
         for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
@@ -196,8 +285,19 @@ public class GameBoard {
     }
 
     private void revealCode() {
-
+        for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
+            Circle dot = new Circle(14);
+            dot.setFill(getColorFromCode(generatedCode.getColor(i)));
+            createGrid.add(dot, i, 0);
+        }
     }
 
+    private void loadGameOverPage() throws IOException {
+        Parent GameOverParent = FXMLLoader.load(getClass().getResource("/mastermind/gui/fxml/GameOver.fxml"));
+        Scene HTP2Scene = new Scene(GameOverParent);
+        Stage window = (Stage) greenButton.getScene().getWindow();        
+        window.setScene(HTP2Scene);
+        window.show();
+    }    
 
 }

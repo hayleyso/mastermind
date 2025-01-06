@@ -58,7 +58,7 @@ public class Code {
     }
 
     public ArrayList<Color> getColors() {
-        return new ArrayList<>(code); 
+        return new ArrayList<>(code);
     }
 
     /**
@@ -94,25 +94,23 @@ public class Code {
         return this.code.equals(other.getColors());
     }
 
-    /**
-     * 
-     * @param other
-     * @return
-     */    
-    @Override
-    public String toString() {
-        return code.toString(); 
-    }
+    // /**
+    //  * 
+    //  * @param other
+    //  * @return
+    //  */
+    // @Override
+    // public String toString() {
+    //     return code.toString();
+    // }
 
-    public static Code generateRandomCode() {
-        Random random = new Random();
-        List<Integer> codeList = new ArrayList<>(Mastermind.CODE_LENGTH);
-        for (int i = 0; i < codeList.size(); i++) {
-            codeList.add(random.nextInt(Color.values().length));
-        }
-        return new Code(codeList);
-    }
+    // public static Code generateRandomCode() {
+    //     Random random = new Random();
+    //     List<Integer> codeList = new ArrayList<>(Mastermind.CODE_LENGTH);
+    //     for (int i = 0; i < codeList.size(); i++) {
+    //         codeList.add(random.nextInt(Color.values().length));
+    //     }
+    //     return new Code(codeList);
+    // }
 
-   
 }
-

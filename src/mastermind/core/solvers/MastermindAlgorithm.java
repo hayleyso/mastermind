@@ -7,6 +7,5 @@ public abstract class MastermindAlgorithm extends MastermindSolver {
     
     public abstract Code guess();
 
-
     
 }
