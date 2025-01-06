@@ -13,11 +13,11 @@ public class StartMenu {
    
     @FXML
     void onPlayBtnClick(ActionEvent event) throws IOException {
-        Parent enterUsernameParent = FXMLLoader.load(getClass().getResource("/mastermind/gui/fxml/EnterUsername.fxml"));
-        Scene enterUsernameScene = new Scene(enterUsernameParent);
+        Parent parent = FXMLLoader.load(getClass().getResource("/mastermind/gui/fxml/EnterUsername.fxml"));
+        Scene scene = new Scene(parent);
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         
-        window.setScene(enterUsernameScene);
+        window.setScene(scene);
         window.show();
     }
 }

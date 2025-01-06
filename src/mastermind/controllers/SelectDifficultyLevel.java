@@ -34,11 +34,11 @@ public class SelectDifficultyLevel {
 
     private void loadGameBoard(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/mastermind/gui/fxml/GameBoard.fxml"));
-        Parent gameBoardParent = loader.load();
-        Scene gameBoardScene = new Scene(gameBoardParent);
+        Parent parent = loader.load();
+        Scene scene = new Scene(parent);
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         
-        window.setScene(gameBoardScene);
+        window.setScene(scene);
         window.show();
     }
 

@@ -8,7 +8,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import mastermind.core.*;
 
 public class SelectGameMode {
 
@@ -28,12 +27,12 @@ public class SelectGameMode {
 
     private void loadGameBoard(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/mastermind/gui/fxml/GameBoard.fxml"));
-        Parent gameBoardParent = loader.load();
+        Parent parent = loader.load();
+
+        GameBoard gameBoard = loader.getController();
+        gameBoard.setGameMode(gameMode);
         
-        GameBoard gameBoardController = loader.getController();
-        gameBoardController.setGameMode(gameMode);
-        
-        Scene gameBoardScene = new Scene(gameBoardParent);
+        Scene gameBoardScene = new Scene(parent);
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         
         window.setScene(gameBoardScene);

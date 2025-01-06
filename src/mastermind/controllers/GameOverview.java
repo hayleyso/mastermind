@@ -13,11 +13,11 @@ public class GameOverview {
 
     @FXML
     void onNextBtnClick(ActionEvent event) throws IOException {
-        Parent gameOverviewparent = FXMLLoader.load(getClass().getResource("/mastermind/gui/fxml/HTP1.fxml"));
-        Scene gameOverviewScene = new Scene(gameOverviewparent);
+        Parent parent = FXMLLoader.load(getClass().getResource("/mastermind/gui/fxml/HTP1.fxml"));
+        Scene scene = new Scene(parent);
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         
-        window.setScene(gameOverviewScene);
+        window.setScene(scene);
         window.show();
     }
 

@@ -13,11 +13,11 @@ public class HTP2 {
 
     @FXML
     void onNextBtnClick(ActionEvent event) throws IOException {
-        Parent selectGameModeParent = FXMLLoader.load(getClass().getResource("/mastermind/gui/fxml/SelectGameMode.fxml"));
-        Scene selectGameModeScene = new Scene(selectGameModeParent);
+        Parent parent = FXMLLoader.load(getClass().getResource("/mastermind/gui/fxml/SelectGameMode.fxml"));
+        Scene scene = new Scene(parent);
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         
-        window.setScene(selectGameModeScene);
+        window.setScene(scene);
         window.show();
     }
 

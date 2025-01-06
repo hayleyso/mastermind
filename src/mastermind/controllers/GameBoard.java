@@ -1,5 +1,6 @@
 package mastermind.controllers;
 
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -42,6 +43,8 @@ public class GameBoard {
     protected GridPane responseGrid;
     @FXML
     protected Text text;
+    @FXML
+    protected Button nextButton;
 
     private int currentGuessRow;
     private int currentGuessColumn;
@@ -50,6 +53,8 @@ public class GameBoard {
 
     private String gameMode;
     private Code generatedCode;
+
+    Timeline timeline = new Timeline();
 
     public void initialize() {
         guessGrid.getChildren().clear();
@@ -74,8 +79,11 @@ public class GameBoard {
         if ("guess".equals(gameMode)) {
             generateRandomCode();
             hideCode();
-            // text.setText("Please enter your guess.");
+            text.setText("Please enter your guess.");
         } 
+        if ("create".equals(gameMode)) {
+            text.setText("Please create a code.");
+        }
     }
 
     private void generateRandomCode() {
@@ -104,6 +112,8 @@ public class GameBoard {
         checkButton.setShape(new Circle(20));
         checkButton.setMinSize(44, 44);
         checkButton.setMaxSize(44, 44);
+
+        nextButton.setVisible(false);
 
         handleButtonActions();
     }
@@ -181,7 +191,7 @@ public class GameBoard {
 
     private void submitGuess() {
         if (currentGuessColumn < Mastermind.CODE_LENGTH) {
-            // text.setText("Please enter four colors.");
+            text.setText("Please enter four colors.");
             return;
         }
 
@@ -202,28 +212,27 @@ public class GameBoard {
         displayResponse(response);
     
         if (response.getResponse().getKey() == Mastermind.CODE_LENGTH) {
-            // text.setText("You win!");
+            text.setText("You win!");
+            revealCode();
+            nextButton.setVisible(true);
         } else {
             currentGuessRow++;
             currentGuessColumn = 0;
-            if (currentGuessRow == Mastermind.NUM_GUESSES - 1) {
-                // text.setText("1 more attempt");
+           
+            if (response.getResponse().getKey() == 0) {
+                text.setText("None correct. " + (Mastermind.NUM_GUESSES - currentGuessRow) + " attempts left.");
+            } else if (currentGuessRow == Mastermind.NUM_GUESSES - 1) {
+                text.setText("1 attempt left");
             } else {
-                // text.setText((Mastermind.NUM_GUESSES - currentGuessRow) + " attempts left.");
+                text.setText((Mastermind.NUM_GUESSES - currentGuessRow) + " attempts left.");
             } 
-            text.setText((currentGuessRow + 1) + " attempts left.");
 
             if (currentGuessRow >= Mastermind.NUM_GUESSES) {
-                // text.setText("You lose.");
+                text.setText("You lose.");
                 revealCode();
-                try {
-                    loadGameOverPage();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                nextButton.setVisible(true);
             }
         }
-        
         currentGuessColumn = 0;
     }
     
@@ -250,16 +259,15 @@ public class GameBoard {
     
             responseGrid.add(peg, columnOffset, rowOffset);
         }
-    
         currentResponseRow += (pegColors.size() + 1) / 2;
-    
-        if (response.getResponse().getKey() == Mastermind.CODE_LENGTH) {
-            revealCode();
-            // text.setText("You win!");
-        }
     }    
     
     private void submitCode() {
+        if (currentCreateColumn < Mastermind.CODE_LENGTH) {
+            text.setText("Please create a code.");
+            return;
+        }
+
         List<Integer> codeList = new ArrayList<>();
         for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
             Circle dot = (Circle) createGrid.getChildren().get(i);
@@ -272,6 +280,7 @@ public class GameBoard {
                                                             ? Code.Color.PURPLE.ordinal()
                                                             : -1);
         }
+        text.setText("Code created. The computer will now try to guess it!");
         Code userCode = new Code(codeList);
     }
     
@@ -292,12 +301,14 @@ public class GameBoard {
         }
     }
 
-    private void loadGameOverPage() throws IOException {
+
+    @FXML
+    void onNextBtnClick() throws IOException {
         Parent GameOverParent = FXMLLoader.load(getClass().getResource("/mastermind/gui/fxml/GameOver.fxml"));
         Scene HTP2Scene = new Scene(GameOverParent);
         Stage window = (Stage) greenButton.getScene().getWindow();        
         window.setScene(HTP2Scene);
         window.show();
-    }    
+    }
 
 }

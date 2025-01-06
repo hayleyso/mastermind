@@ -4,15 +4,17 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="841.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mastermind.controllers.StartMenu">
+<AnchorPane layoutY="55.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="844.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mastermind.controllers.GameOver">
    <children>
       <ImageView fx:id="img" fitHeight="470.0" fitWidth="810.0" layoutX="13.0" layoutY="72.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="72.375" AnchorPane.leftAnchor="13.0" AnchorPane.rightAnchor="18.0" AnchorPane.topAnchor="72.0">
          <image>
             <Image url="@../img/background/GameOver.png" />
          </image>
       </ImageView>
-      <Button layoutX="350.0" layoutY="335.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="49.0">
+      <Button layoutX="350.0" layoutY="335.0" mnemonicParsing="false" onAction="#onPlayAgainBtnClick" prefHeight="37.0" prefWidth="49.0">
          <graphic>
             <ImageView id="playAgainButton" fitHeight="23.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -21,7 +23,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button layoutX="437.0" layoutY="335.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="49.0">
+      <Button layoutX="437.0" layoutY="335.0" mnemonicParsing="false" onAction="#onExitBtnClick" prefHeight="37.0" prefWidth="49.0">
          <graphic>
             <ImageView id="exitButton" fitHeight="22.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -30,5 +32,15 @@
             </ImageView>
          </graphic>
       </Button>
+      <Text fill="WHITE" layoutX="347.0" layoutY="393.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Play Again">
+         <font>
+            <Font name="SansSerif Regular" size="12.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="434.0" layoutY="393.0" strokeType="OUTSIDE" strokeWidth="0.0" text="New Game">
+         <font>
+            <Font name="SansSerif Regular" size="12.0" />
+         </font>
+      </Text>
    </children>
 </AnchorPane>

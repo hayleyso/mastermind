@@ -36,12 +36,11 @@ public class EnterUsername {
     public void submit(ActionEvent event) throws IOException {
         submit.setDisable(true);
         username = usernameField.getText();
-        System.out.println(username);
-        Parent gameOverviewParent = FXMLLoader.load(getClass().getResource("/mastermind/gui/fxml/GameOverview.fxml"));
-        Scene gameOverviewScene = new Scene(gameOverviewParent);
+        Parent parent = FXMLLoader.load(getClass().getResource("/mastermind/gui/fxml/GameOverview.fxml"));
+        Scene scene = new Scene(parent);
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
             
-        window.setScene(gameOverviewScene);
+        window.setScene(scene);
         window.show();
     }
 }
