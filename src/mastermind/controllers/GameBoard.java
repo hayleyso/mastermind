@@ -8,10 +8,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import mastermind.Mastermind;
+import mastermind.MastermindUtils;
 import mastermind.core.Code;
 import mastermind.core.Response;
 import mastermind.core.solvers.MastermindAlgorithm;
-import mastermind.utils.SceneLoader;
 
 import java.io.IOException;
 import java.util.*;
@@ -34,6 +34,8 @@ public class GameBoard {
     @FXML
     protected Button resetButton;
     @FXML
+    protected Button questionButton;
+    @FXML
     protected GridPane guessGrid;
     @FXML
     protected GridPane createGrid;
@@ -55,6 +57,10 @@ public class GameBoard {
 
     private long startTime;
     private long endTime;
+
+    private boolean isGameFinished;
+
+    MastermindUtils util = new MastermindUtils();
 
     public void initialize() {
         guessGrid.getChildren().clear();
@@ -99,7 +105,7 @@ public class GameBoard {
     private void setUpButtons() {
         Button[] colorButtons = { greenButton, redButton, blueButton, yellowButton, orangeButton, purpleButton };
         for (Button button : colorButtons) {
-            button.setShape(new Circle(16));
+            button.setShape(new Circle(15));
             button.setMinSize(30, 30);
             button.setMaxSize(30, 30);
         }
@@ -109,6 +115,7 @@ public class GameBoard {
         checkButton.setShape(new Circle(20));
         checkButton.setMinSize(44, 44);
         checkButton.setMaxSize(44, 44);
+        questionButton.setShape(new Circle(10));
 
         nextButton.setVisible(false);
 
@@ -210,6 +217,8 @@ public class GameBoard {
             text.setText("Congratulations! It took you " + (currentGuessRow + 1) + " guesses.");
             revealCode();
             nextButton.setVisible(true);
+            resetButton.setDisable(true);
+            checkButton.setDisable(true);
             endTime = System.currentTimeMillis();
             long timeTaken = endTime - startTime;
         } else {
@@ -225,38 +234,13 @@ public class GameBoard {
             }
     
             if (currentGuessRow >= Mastermind.NUM_GUESSES) {
-                text.setText("I'm sorry you lose.");
+                text.setText("I'm sorry, you lose.");
                 revealCode();
                 nextButton.setVisible(true);
             }
         }
         currentGuessColumn = 0;
     }    
-    
-    // private void displayResponse(Response response) {
-    //     List<String> pegColors = response.getPegColors();
-    
-    //     for (int i = 0; i < pegColors.size(); i++) {
-    //         Circle peg = new Circle(4);
-    
-    //         if ("BLACK".equals(pegColors.get(i))) {
-    //             peg.setFill(Color.BLACK);
-    //             peg.setStroke(Color.BLACK);
-    //             peg.setStrokeWidth(1.5);
-    //         } else if ("WHITE".equals(pegColors.get(i))) {
-    //             peg.setFill(Color.WHITE);
-    //             peg.setStroke(Color.BLACK);
-    //             peg.setStrokeWidth(1.5);
-    //         } else {
-    //             continue; 
-    //         }
-    //         int columnOffset = i % 2; 
-    //         int rowOffset = currentResponseRow + (i / 2);  
-    
-    //         responseGrid.add(peg, columnOffset, rowOffset);
-    //     }
-    //     currentResponseRow += (pegColors.size() + 1) / 2;
-    // }    
 
     private void displayResponse(Response response) {
         List<String> pegColors = response.getPegColors();
@@ -309,7 +293,6 @@ public class GameBoard {
         Code userCode = new Code(codeList);
     }
     
-
     private void hideCode() {
         for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
             Circle grayCircle = new Circle(14);
@@ -329,14 +312,19 @@ public class GameBoard {
 
     @FXML
     void onNextBtnClick(ActionEvent event) throws IOException {
-        SceneLoader.loadPage(event, "/mastermind/gui/fxml/GameOver.fxml");
+        util.loadScene(event, "/mastermind/gui/fxml/GameOver.fxml");
     }
 
     private void formatTime(final long timeTaken) {
-        // display 0:00
+        // display as 0:00
         long minutes = timeTaken / 60000;
         long seconds = (timeTaken % 60000) / 1000;
         String time = String.format("%d:%02d", minutes, seconds);
+    }
+
+    @FXML
+    void onQuestionBtnClick(ActionEvent event) throws IOException {
+
     }
 
 }

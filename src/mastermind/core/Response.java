@@ -44,7 +44,6 @@ public class Response {
                 }
             }
         }
-
         response = new Pair<>(correctCount, misplacedCount);
     }
 

@@ -5,7 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import mastermind.utils.SceneLoader;
+import mastermind.MastermindUtils;
 
 public class EnterUsername {
     private String username;
@@ -32,6 +32,6 @@ public class EnterUsername {
     public void submit(ActionEvent event) throws IOException {
         submit.setDisable(true);
         username = usernameField.getText();
-        SceneLoader.loadPage(event, "/mastermind/gui/fxml/GameOverview.fxml");
+        MastermindUtils.loadScene(event, "/mastermind/gui/fxml/GameOverview.fxml");
     }
 }
