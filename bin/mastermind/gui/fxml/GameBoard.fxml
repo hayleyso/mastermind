@@ -98,7 +98,7 @@
           <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
       </GridPane>
-      <Text id="text" fx:id="text" layoutX="256.0" layoutY="569.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="315.1366882324219">
+      <Text id="text" fx:id="text" layoutX="252.0" layoutY="568.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="343.6366882324219">
          <font>
             <Font name="SansSerif Regular" size="14.0" />
          </font></Text>

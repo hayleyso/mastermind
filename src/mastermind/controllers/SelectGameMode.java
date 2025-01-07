@@ -15,8 +15,7 @@ public class SelectGameMode {
     
     @FXML
     void onCreateModeClick(ActionEvent event) throws IOException {
-        GameBoard gameBoard = MastermindUtils.loadScene(event, "/mastermind/gui/fxml/SelectDifficultyLevel.fxml");
-        gameBoard.setGameMode("create");
+        MastermindUtils.loadScene(event, "/mastermind/gui/fxml/SelectDifficultyLevel.fxml");
     }
 
 }

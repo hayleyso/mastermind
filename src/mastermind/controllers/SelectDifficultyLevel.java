@@ -7,23 +7,26 @@ import mastermind.MastermindUtils;
 
 public class SelectDifficultyLevel {
     private String difficultyLevel;
-  
+
     @FXML
     void onEasyLevelClick(ActionEvent event) throws IOException {
-        GameBoard gameBoard = MastermindUtils.loadScene(event, "/mastermind/gui/fxml/GameBoard.fxml");
-        gameBoard.setSolver(difficultyLevel);
+        handleDifficulty(event, "easy");
     }
 
     @FXML
     void onMediumLevelClick(ActionEvent event) throws IOException {
-        difficultyLevel = "medium";
-        MastermindUtils.loadScene(event, "/mastermind/gui/fxml/GameBoard.fxml");
-
+        handleDifficulty(event, "medium");
     }
 
     @FXML
     void onHardLevelClick(ActionEvent event) throws IOException {
-        difficultyLevel = "hard";
-        MastermindUtils.loadScene(event, "/mastermind/gui/fxml/GameBoard.fxml");
+        handleDifficulty(event, "hard");
+    }
+
+    private void handleDifficulty(ActionEvent event, String level) throws IOException {
+        difficultyLevel = level;
+        GameBoard gameBoard = MastermindUtils.loadScene(event, "/mastermind/gui/fxml/GameBoard.fxml");
+        gameBoard.setSolver(difficultyLevel);
+        gameBoard.setGameMode("create");
     }
 }

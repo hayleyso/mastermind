@@ -14,8 +14,8 @@ public class Mastermind extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // Parent root = FXMLLoader.load(getClass().getResource("gui/fxml/StartMenu.fxml"));
-        Parent root = FXMLLoader.load(getClass().getResource("gui/fxml/SelectGameMode.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("gui/fxml/StartMenu.fxml"));
+        // Parent root = FXMLLoader.load(getClass().getResource("gui/fxml/SelectGameMode.fxml"));
         Scene scene = new Scene(root);
 
         primaryStage.setTitle("Play Mastermind!");

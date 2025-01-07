@@ -86,9 +86,8 @@ public class GameBoard {
             text.setText("Please enter your guess.");
         } 
         if ("create".equals(gameMode)) {
-            text.setText("Please create a code.");
+            text.setText("Please create your code.");
         }
-
         startTime = System.currentTimeMillis();
     }
 
@@ -98,6 +97,7 @@ public class GameBoard {
     }
 
     public void setSolver(String difficultyLevel) {
+        
     }
 
     private void setUpButtons() {
@@ -175,7 +175,7 @@ public class GameBoard {
 
     private void submitGuess() {
         if (currentGuessColumn < Mastermind.CODE_LENGTH) {
-            text.setText("Please enter four colors.");
+            text.setText("Invalid. Please enter 4 colors.");
             return;
         }
         List<Integer> guessList = new ArrayList<>();
@@ -254,7 +254,7 @@ public class GameBoard {
     
     private void submitCode() {
         if (currentCreateColumn < Mastermind.CODE_LENGTH) {
-            text.setText("Please create a code.");
+            text.setText("Invalid. Please enter 4 colours.");
             return;
         }
 
@@ -271,6 +271,7 @@ public class GameBoard {
                                                             : -1);
         }
         text.setText("Code created. The computer will now try to guess it!");
+        disableButtons();
         Code userCode = new Code(codeList);
     }
     
@@ -299,7 +300,6 @@ public class GameBoard {
         resetButton.setDisable(true);
     }
     
-
     @FXML
     void onNextBtnClick(ActionEvent event) throws IOException {
         MastermindUtils.loadScene(event, "/mastermind/gui/fxml/GameOver.fxml");

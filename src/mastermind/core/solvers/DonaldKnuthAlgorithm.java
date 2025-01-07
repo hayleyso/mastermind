@@ -49,6 +49,12 @@ public class DonaldKnuthAlgorithm extends MastermindAlgorithm {
         throw new UnsupportedOperationException("Unimplemented method 'guess'");
     }
 
+    // @Override
+    // public Pair<Status, Code> guess(Response response) {
+    //     // TODO Auto-generated method stub
+    //     throw new UnsupportedOperationException("Unimplemented method 'guess'");
+    // }
+
     
 
     
