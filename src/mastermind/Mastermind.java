@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class Mastermind extends Application {
@@ -17,7 +18,9 @@ public class Mastermind extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("gui/fxml/SelectGameMode.fxml"));
         Scene scene = new Scene(root);
 
-        primaryStage.setTitle("Mastermind");
+        primaryStage.setTitle("Play Mastermind!");
+        // add icon
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/mastermind/gui/img/icons/logo.png")));
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.setResizable(false);

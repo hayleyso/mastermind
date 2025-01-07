@@ -60,8 +60,6 @@ public class GameBoard {
 
     private boolean isGameFinished;
 
-    MastermindUtils util = new MastermindUtils();
-
     public void initialize() {
         guessGrid.getChildren().clear();
         createGrid.getChildren().clear();
@@ -160,28 +158,10 @@ public class GameBoard {
 
     private void displayColors(Code.Color color, GridPane grid, int col, int row) {
         Circle dot = new Circle(12);
-        dot.setFill(getColorFromCode(color));
+        dot.setFill(MastermindUtils.getColorFromCode(color));
         grid.add(dot, col, row);
     }
 
-    private Color getColorFromCode(Code.Color color) {
-        switch (color) {
-            case GREEN:
-                return Color.SEAGREEN;
-            case RED:
-                return Color.CRIMSON;
-            case BLUE:
-                return Color.ROYALBLUE;
-            case YELLOW:
-                return Color.GOLD;
-            case ORANGE:
-                return Color.DARKORANGE;
-            case PURPLE:
-                return Color.MEDIUMPURPLE;
-            default:
-                return Color.TRANSPARENT;
-        }
-    }
 
     private void resetGuess() {
         guessGrid.getChildren().removeIf(node -> GridPane.getRowIndex(node) != null && GridPane.getRowIndex(node) == currentGuessRow);
@@ -217,10 +197,10 @@ public class GameBoard {
             text.setText("Congratulations! It took you " + (currentGuessRow + 1) + " guesses.");
             revealCode();
             nextButton.setVisible(true);
-            resetButton.setDisable(true);
-            checkButton.setDisable(true);
+            disableButtons();
             endTime = System.currentTimeMillis();
             long timeTaken = endTime - startTime;
+            isGameFinished = true;
         } else {
             currentGuessRow++;
             currentGuessColumn = 0;
@@ -237,6 +217,8 @@ public class GameBoard {
                 text.setText("I'm sorry, you lose.");
                 revealCode();
                 nextButton.setVisible(true);
+                disableButtons();
+                isGameFinished = true;
             }
         }
         currentGuessColumn = 0;
@@ -246,7 +228,6 @@ public class GameBoard {
         List<String> pegColors = response.getPegColors();
         List<Circle> pegs = new ArrayList<>();
     
-        // Create pegs based on the response
         for (String color : pegColors) {
             if ("BLACK".equals(color) || "WHITE".equals(color)) {
                 Circle peg = new Circle(4);
@@ -304,27 +285,29 @@ public class GameBoard {
     private void revealCode() {
         for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
             Circle dot = new Circle(14);
-            dot.setFill(getColorFromCode(generatedCode.getColor(i)));
+            dot.setFill(MastermindUtils.getColorFromCode(generatedCode.getColor(i)));
             createGrid.add(dot, i, 0);
         }
     }
 
+    private void disableButtons() {
+        Button[] colorButtons = { greenButton, redButton, blueButton, yellowButton, orangeButton, purpleButton };
+        for (Button button : colorButtons) {
+            button.setDisable(true);
+        }
+        checkButton.setDisable(true);
+        resetButton.setDisable(true);
+    }
+    
 
     @FXML
     void onNextBtnClick(ActionEvent event) throws IOException {
-        util.loadScene(event, "/mastermind/gui/fxml/GameOver.fxml");
-    }
-
-    private void formatTime(final long timeTaken) {
-        // display as 0:00
-        long minutes = timeTaken / 60000;
-        long seconds = (timeTaken % 60000) / 1000;
-        String time = String.format("%d:%02d", minutes, seconds);
+        MastermindUtils.loadScene(event, "/mastermind/gui/fxml/GameOver.fxml");
     }
 
     @FXML
     void onQuestionBtnClick(ActionEvent event) throws IOException {
-
+        
     }
 
 }
