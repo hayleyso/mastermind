@@ -19,10 +19,10 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import mastermind.core.Code;
 
-public class MastermindUtils {
+public class Utils {
 
     public static <T> T loadScene(ActionEvent event, String fxmlPath) throws IOException {
-        FXMLLoader loader = new FXMLLoader(MastermindUtils.class.getResource(fxmlPath));
+        FXMLLoader loader = new FXMLLoader(Utils.class.getResource(fxmlPath));
         Parent parent = loader.load();
         Scene scene = new Scene(parent);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();

@@ -6,7 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import mastermind.MastermindUtils;
+import mastermind.Utils;
 import mastermind.core.State;
 
 public class PopupWindow {
@@ -28,7 +28,7 @@ public class PopupWindow {
     void onNewGameBtnClick(ActionEvent event) throws IOException {
         Stage stage = (Stage) button.getScene().getWindow();
         stage.close();
-        MastermindUtils.loadScene(event, "/mastermind/gui/fxml/SelectGameMode.fxml");
+        Utils.loadScene(event, "/mastermind/gui/fxml/SelectGameMode.fxml");
     }
 
     @FXML

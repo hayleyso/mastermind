@@ -11,7 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import mastermind.MastermindUtils;
+import mastermind.Utils;
 import mastermind.core.State;
 
 public class EnterUsername {
@@ -42,10 +42,10 @@ public class EnterUsername {
         State.getInstance().setUsername(username);
 
         //check if user has an unfinished game
-        if (MastermindUtils.hasUnfinishedGame(username)) {
+        if (Utils.hasUnfinishedGame(username)) {
             showPopup(event);
         } else {
-            MastermindUtils.loadScene(event, "/mastermind/gui/fxml/SelectGameMode.fxml");
+            Utils.loadScene(event, "/mastermind/gui/fxml/SelectGameMode.fxml");
         }
     }
 

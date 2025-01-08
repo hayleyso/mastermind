@@ -8,7 +8,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import mastermind.Mastermind;
-import mastermind.MastermindUtils;
+import mastermind.Utils;
 import mastermind.core.Code;
 import mastermind.core.State;
 import mastermind.core.Response;
@@ -91,7 +91,7 @@ public class GameBoard {
         mode = state.getGameMode();
         difficultyLevel = state.getDifficultyLevel();
 
-        MastermindUtils.addName(username);
+        Utils.addName(username);
 
         setUpButtons();
 
@@ -121,7 +121,6 @@ public class GameBoard {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     private void setUpButtons() {
@@ -181,7 +180,7 @@ public class GameBoard {
 
     private void displayColors(Code.Color color, GridPane grid, int col, int row) {
         Circle dot = new Circle(12);
-        dot.setFill(MastermindUtils.getColor(color));
+        dot.setFill(Utils.getColor(color));
         grid.add(dot, col, row);
     }
 
@@ -229,13 +228,13 @@ public class GameBoard {
             isGameFinished = true;
 
             try {
-                MastermindUtils.removeName(username);
+                Utils.removeName(username);
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            MastermindUtils.updateGuessLeaderBoard(username, currentGuessRow + 1, timeTaken);
-            MastermindUtils.deleteGameState(username, mode);
+            Utils.updateGuessLeaderBoard(username, currentGuessRow + 1, timeTaken);
+            Utils.deleteGameState(username, mode);
 
         } else {
             currentGuessRow++;
@@ -320,7 +319,7 @@ public class GameBoard {
     private void revealCode() {
         for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
             Circle dot = new Circle(14);
-            dot.setFill(MastermindUtils.getColor(generatedCode.getColor(i)));
+            dot.setFill(Utils.getColor(generatedCode.getColor(i)));
             createGrid.add(dot, i, 0);
         }
     }
@@ -337,7 +336,7 @@ public class GameBoard {
 
     @FXML
     void onNextBtnClick(ActionEvent event) throws IOException {
-        MastermindUtils.loadScene(event, "/mastermind/gui/fxml/GameOver.fxml");
+        Utils.loadScene(event, "/mastermind/gui/fxml/GameOver.fxml");
     }
 
     @FXML

@@ -3,7 +3,7 @@ package mastermind.controllers;
 import java.io.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import mastermind.MastermindUtils;
+import mastermind.Utils;
 import mastermind.core.State;
 
 public class SelectDifficultyLevel {
@@ -25,7 +25,7 @@ public class SelectDifficultyLevel {
     }
 
     private void handleDifficulty(ActionEvent event, String level) throws IOException {
-        MastermindUtils.loadScene(event, "/mastermind/gui/fxml/GameBoard.fxml");
+        Utils.loadScene(event, "/mastermind/gui/fxml/GameBoard.fxml");
         gameState.setDifficultyLevel(level);  
         gameState.setGameMode("create");
     }
