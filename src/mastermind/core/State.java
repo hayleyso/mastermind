@@ -1,17 +1,17 @@
 package mastermind.core;
 
-public class GameState {
-    private static GameState instance;
+public class State {
+    private static State instance;
     
     private String username;
     private String difficultyLevel;
     private String gameMode;
 
-    private GameState() {}
+    private State() {}
 
-    public static GameState getInstance() {
+    public static State getInstance() {
         if (instance == null) {
-            instance = new GameState();
+            instance = new State();
         }
         return instance;
     }

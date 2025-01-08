@@ -10,7 +10,7 @@ import javafx.scene.text.Text;
 import mastermind.Mastermind;
 import mastermind.MastermindUtils;
 import mastermind.core.Code;
-import mastermind.core.GameState;
+import mastermind.core.State;
 import mastermind.core.Response;
 import mastermind.core.solvers.MastermindAlgorithm;
 
@@ -57,7 +57,7 @@ public class GameBoard {
     private List<String> responses = new ArrayList<>();
 
     private Code generatedCode;
-    private GameState gameState = GameState.getInstance();
+    private State state = State.getInstance();
     private MastermindAlgorithm solver;
 
     private int currentGuessRow;
@@ -87,9 +87,9 @@ public class GameBoard {
         currentCreateColumn = 0;
         currentResponseRow = 0;
 
-        username = gameState.getUsername();
-        mode = gameState.getGameMode();
-        difficultyLevel = gameState.getDifficultyLevel();
+        username = state.getUsername();
+        mode = state.getGameMode();
+        difficultyLevel = state.getDifficultyLevel();
 
         MastermindUtils.addName(username);
 

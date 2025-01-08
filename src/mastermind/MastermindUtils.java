@@ -108,17 +108,17 @@ public class MastermindUtils {
         return false;
     }
 
-    public static void saveGameState(String mode, Code code, List<String> guesses, List<String> responses) {
-
+    public static void saveGameState(String username, String mode, Code code, List<String> guesses, List<String> responses) throws IOException {
+        FileWriter file  = new FileWriter("mastermind\\data\\users\\" + mode + "\\" + username + ".txt");
     }
 
-    public static void saveGameState(String mode, String level, Code code, List<String> guesses, List<String> responses) {
-       
+    public static void saveGameState(String username, String mode, String level, Code code, List<String> guesses, List<String> responses) throws IOException {
+        FileWriter file  = new FileWriter("mastermind\\data\\users\\" + mode + "\\" + username + ".txt");
+        
     }
 
     public static void deleteGameState(String username, String mode) {
-        String filePath = "mastermind\\data\\users\\"
-                + mode + "\\" + username + ".txt";
+        String filePath = "mastermind\\data\\users\\" + mode + "\\" + username + ".txt";
         File file = new File(filePath);
         file.delete();
     }

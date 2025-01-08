@@ -12,7 +12,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import mastermind.MastermindUtils;
-import mastermind.core.GameState;
+import mastermind.core.State;
 
 public class EnterUsername {
     @FXML
@@ -39,7 +39,7 @@ public class EnterUsername {
     public void submit(ActionEvent event) throws IOException {
         submit.setDisable(true);
         username = usernameField.getText();
-        GameState.getInstance().setUsername(username);
+        State.getInstance().setUsername(username);
 
         //check if user has an unfinished game
         if (MastermindUtils.hasUnfinishedGame(username)) {

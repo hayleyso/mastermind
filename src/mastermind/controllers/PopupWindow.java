@@ -7,7 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import mastermind.MastermindUtils;
-import mastermind.core.GameState;
+import mastermind.core.State;
 
 public class PopupWindow {
     @FXML
@@ -21,7 +21,7 @@ public class PopupWindow {
 
     @FXML
     void initialize() {
-        text.setText("Welcome back, " + GameState.getInstance().getUsername() + "!");
+        text.setText("Welcome back, " + State.getInstance().getUsername() + "!");
     }
 
     @FXML

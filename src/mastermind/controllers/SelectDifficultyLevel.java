@@ -4,10 +4,10 @@ import java.io.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import mastermind.MastermindUtils;
-import mastermind.core.GameState;
+import mastermind.core.State;
 
 public class SelectDifficultyLevel {
-    private GameState gameState = GameState.getInstance();
+    private State gameState = State.getInstance();
 
     @FXML
     void onEasyLevelClick(ActionEvent event) throws IOException {
