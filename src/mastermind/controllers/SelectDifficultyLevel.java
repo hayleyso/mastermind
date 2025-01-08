@@ -4,9 +4,10 @@ import java.io.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import mastermind.MastermindUtils;
+import mastermind.core.GameState;
 
 public class SelectDifficultyLevel {
-    private String difficultyLevel;
+    private GameState gameState = GameState.getInstance();
 
     @FXML
     void onEasyLevelClick(ActionEvent event) throws IOException {
@@ -24,9 +25,8 @@ public class SelectDifficultyLevel {
     }
 
     private void handleDifficulty(ActionEvent event, String level) throws IOException {
-        difficultyLevel = level;
-        GameBoard gameBoard = MastermindUtils.loadScene(event, "/mastermind/gui/fxml/GameBoard.fxml");
-        gameBoard.setSolver(difficultyLevel);
-        gameBoard.setGameMode("create");
+        MastermindUtils.loadScene(event, "/mastermind/gui/fxml/GameBoard.fxml");
+        gameState.setDifficultyLevel(level);  
+        gameState.setGameMode("create");
     }
 }

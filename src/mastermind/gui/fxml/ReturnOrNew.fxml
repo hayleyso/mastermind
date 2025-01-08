@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="232.0" prefWidth="412.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mastermind.controllers.EnterUsername">
+   <children>
+      <Button fx:id="returnButton" layoutX="107.0" layoutY="184.0" mnemonicParsing="false" onAction="#onReturnBtnClick" prefHeight="25.0" prefWidth="88.0" text="Return" />
+      <Button fx:id="newGameButton" layoutX="208.0" layoutY="184.0" mnemonicParsing="false" onAction="#onNewGameBtnClick" prefHeight="25.0" prefWidth="88.0" text="New Game" />
+      <Text fx:id="text" layoutX="24.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="357.1367301940918">
+         <font>
+            <Font name="SansSerif Regular" size="16.0" />
+         </font>
+      </Text>
+      <Text fill="#605f5f" layoutX="22.0" layoutY="120.0" strokeType="OUTSIDE" strokeWidth="0.0" text="You have an unfinished game. Would you like to return to the game and resume there or start a new game? Starting a new game will erase your previous progress." wrappingWidth="364.4700736999512">
+         <font>
+            <Font name="Segoe UI" size="13.0" />
+         </font>
+      </Text>
+   </children>
+</AnchorPane>

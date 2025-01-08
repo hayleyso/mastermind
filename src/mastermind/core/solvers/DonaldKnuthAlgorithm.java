@@ -1,7 +1,6 @@
 package mastermind.core.solvers;
 
 import java.util.*;
-
 import javafx.util.Pair;
 import mastermind.Mastermind;
 import mastermind.core.*;
@@ -43,19 +42,7 @@ public class DonaldKnuthAlgorithm extends MastermindAlgorithm {
         return currentGuess;
     }
 
-    @Override
-    public Pair<Status, Code> guess(Response response) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'guess'");
-    }
 
-    // @Override
-    // public Pair<Status, Code> guess(Response response) {
-    //     // TODO Auto-generated method stub
-    //     throw new UnsupportedOperationException("Unimplemented method 'guess'");
-    // }
-
-    
 
     
 }
