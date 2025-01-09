@@ -54,4 +54,10 @@ public class Response {
     public List<String> getPegColors() {
         return pegColors;
     }
+
+    @Override
+    public String toString() {
+        return response.getKey() + "B" + response.getValue() + "W";
+    }
+
 }

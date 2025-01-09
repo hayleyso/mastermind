@@ -28,7 +28,10 @@ public class PopupWindow {
     void onNewGameBtnClick(ActionEvent event) throws IOException {
         Stage stage = (Stage) button.getScene().getWindow();
         stage.close();
+
+        Utils.deleteGameState(State.getInstance().getUsername());
         Utils.loadScene(event, "/mastermind/gui/fxml/SelectGameMode.fxml");
+
     }
 
     @FXML
@@ -36,12 +39,6 @@ public class PopupWindow {
         Stage stage = (Stage) button.getScene().getWindow();
         stage.close();
         
-        // TODO implement file input and set up gameboard
-        // get file
-        // read and set up gameboard
-
-
-        // close popup scene
     }
     
 }

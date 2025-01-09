@@ -16,14 +16,14 @@ public class Code {
             return Color.values()[index];
         }
 
-        /**
-         * 
-         * @param index
-         * @return
-         */
         public static String toString(final int index) {
             return fromIndex(index).name();
         }
+
+        public String toSaveString() {
+            return name();
+        }
+
     }
 
     private final ArrayList<Color> code;
@@ -94,16 +94,6 @@ public class Code {
         return this.code.equals(other.getColors());
     }
 
-    // /**
-    //  * 
-    //  * @param other
-    //  * @return
-    //  */
-    // @Override
-    // public String toString() {
-    //     return code.toString();
-    // }
-
     public static Code generateRandomCode() {
         List<Integer> codeList = new ArrayList<>();
         Random random = new Random();
@@ -111,6 +101,18 @@ public class Code {
             codeList.add(random.nextInt(Color.values().length));
         }
         return new Code(codeList);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < code.size(); i++) {
+            sb.append(code.get(i).toSaveString()); 
+            if (i < code.size() - 1) { 
+                sb.append(" "); 
+            }
+        }
+        return sb.toString();
     }
 
 }

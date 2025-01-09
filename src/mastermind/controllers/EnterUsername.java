@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import mastermind.Mastermind;
 import mastermind.Utils;
 import mastermind.core.State;
 
@@ -58,13 +59,8 @@ public class EnterUsername {
         popupStage.initOwner(((Button) event.getSource()).getScene().getWindow());
         popupStage.setScene(new Scene(popupContent));
         popupStage.setTitle("Mastermind");
-        popupStage.getIcons().add(new Image(getClass().getResourceAsStream("/mastermind/gui/img/icons/logo.png")));
+        popupStage.getIcons().add(new Image(getClass().getResourceAsStream(Mastermind.ICON_PATH)));
         popupStage.setResizable(false);
-
-        // prevent user from closing the popup
-        // popupStage.setOnCloseRequest(closeEvent -> {
-        //     closeEvent.consume(); 
-        // });
 
         popupStage.showAndWait();
     }

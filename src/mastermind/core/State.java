@@ -1,17 +1,22 @@
 package mastermind.core;
 
 public class State {
-    private static State instance;
+    private static volatile State instance;
     
     private String username;
-    private String difficultyLevel;
-    private String gameMode;
+    private String mode;
+    private String createLevel;
+    private String guessLevel;
 
     private State() {}
 
     public static State getInstance() {
         if (instance == null) {
-            instance = new State();
+            synchronized (State.class) {
+                if (instance == null) {
+                    instance = new State();
+                }
+            }
         }
         return instance;
     }
@@ -24,19 +29,27 @@ public class State {
         this.username = username;
     }
 
-    public String getDifficultyLevel() {
-        return difficultyLevel;
+    public String getGuessDifficultyLevel() {
+        return guessLevel;
     }
 
-    public void setDifficultyLevel(String difficultyLevel) {
-        this.difficultyLevel = difficultyLevel;
+    public void setGuessDifficultyLevel(String guessLevel) {
+        this.guessLevel = guessLevel;
+    }
+
+    public String getCreateDifficultyLevel() {
+        return createLevel;
+    }
+
+    public void setCreateDifficultyLevel(String createLevel) {
+        this.createLevel = createLevel;
     }
 
     public String getGameMode() {
-        return gameMode;
+        return mode;
     }
 
     public void setGameMode(String gameMode) {
-        this.gameMode = gameMode;
+        this.mode = gameMode;
     }
 }

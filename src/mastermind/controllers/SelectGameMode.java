@@ -11,12 +11,12 @@ public class SelectGameMode {
     @FXML
     void onGuessModeClick(ActionEvent event) throws IOException {
         State.getInstance().setGameMode("guess");
-        Utils.loadScene(event, "/mastermind/gui/fxml/GameBoard.fxml");
+        Utils.loadScene(event, "/mastermind/gui/fxml/SelectGuessDifficultyLevel.fxml");
     }
     
     @FXML
     void onCreateModeClick(ActionEvent event) throws IOException {
         State.getInstance().setGameMode("create");
-        Utils.loadScene(event, "/mastermind/gui/fxml/SelectDifficultyLevel.fxml");
+        Utils.loadScene(event, "/mastermind/gui/fxml/SelectCreateDifficultyLevel.fxml");
     }
 }

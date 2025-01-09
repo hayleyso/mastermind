@@ -3,13 +3,11 @@ package mastermind;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -20,6 +18,9 @@ import javafx.stage.Stage;
 import mastermind.core.Code;
 
 public class Utils {
+    private static final String GAME_STATE_FILE = "src/mastermind/data/users/game states.txt";
+    private static final String CREATE_LEADERBOARD_FILE = "src/mastermind/data/create leaderboard.txt";
+    private static final String GUESS_LEADERBOARD_FILE = "src/mastermind/data/guess leaderboard.txt";
 
     public static <T> T loadScene(ActionEvent event, String fxmlPath) throws IOException {
         FXMLLoader loader = new FXMLLoader(Utils.class.getResource(fxmlPath));
@@ -53,12 +54,12 @@ public class Utils {
     }
 
     public static void updateGuessLeaderBoard(String username, int attempts, long timeTaken) {
-        File file = new File("guess leaderboard.txt");
+        File file = new File(GUESS_LEADERBOARD_FILE);
         file.setWritable(true);
     }
 
     public static void udpateCreateLeaderBoard(String username, int attempts, long timeTaken) {
-        File file = new File("create leaderboard.txt");
+        File file = new File(CREATE_LEADERBOARD_FILE);
         file.setWritable(true);
     }
 
@@ -67,59 +68,113 @@ public class Utils {
         long seconds = (timeTaken % 60000) / 1000;
         return String.format("%d:%02d", minutes, seconds);
     }
-
-    public static void addName(String name) throws IOException {
-        FileWriter writer = new FileWriter("src/mastermind/data/users/unfinished games.txt", true);
-        writer.write(name + "\n");
-        writer.close();
-    }
-
-    public static void removeName(String name) throws IOException {
-        File file = new File("src/mastermind/data/users/unfinished games.txt"); 
-        String currentLine;
-        List<String> lines = new ArrayList<>();
-
-        BufferedReader reader = new BufferedReader(new FileReader(file));
-        while ((currentLine = reader.readLine()) != null) {
-            if (!currentLine.trim().equals(name)) {
-                lines.add(currentLine);
-            }
-        }
-
-        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-        for (String line : lines) {
-            writer.write(line + System.lineSeparator());
-        }
-        reader.close();
-        writer.close();
-    }
-
-    public static boolean hasUnfinishedGame(String username) throws FileNotFoundException {
-        File file = new File("src/mastermind/data/users/unfinished games.txt");
-
-        try (Scanner sc = new Scanner(file)) {
-            while (sc.hasNextLine()) {
-                String line = sc.nextLine().trim();
-                if (line.equals(username)) {
-                    return true;
-                }
+    
+    public static boolean hasUnfinishedGame(String username) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(GAME_STATE_FILE));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] parts = line.split("\\|");
+            if (parts[0].equals(username)) {
+                return true;
             }
         }
         return false;
     }
 
-    public static void saveGameState(String username, String mode, Code code, List<String> guesses, List<String> responses) throws IOException {
-        FileWriter file  = new FileWriter("mastermind\\data\\users\\" + mode + "\\" + username + ".txt");
+    public static void addNameStateAndCode(String name, String mode, Code code) throws IOException {
+        String entry = '\n' + name + "|" + mode + "|" +  code.toString() + "|";
+        BufferedWriter writer = new BufferedWriter(new FileWriter(GAME_STATE_FILE, true));
+        writer.write(entry);
+        writer.close();   
     }
 
-    public static void saveGameState(String username, String mode, String level, Code code, List<String> guesses, List<String> responses) throws IOException {
-        FileWriter file  = new FileWriter("mastermind\\data\\users\\" + mode + "\\" + username + ".txt");
-        
+    public static void addNameStateAndLevel(String name, String mode, String level) throws IOException {
+        String entry = '\n' + name + "|" + mode + "|" + level + "|";
+        BufferedWriter writer = new BufferedWriter(new FileWriter(GAME_STATE_FILE, true));
+        writer.write(entry);
+        writer.close();
     }
 
-    public static void deleteGameState(String username, String mode) {
-        String filePath = "mastermind\\data\\users\\" + mode + "\\" + username + ".txt";
-        File file = new File(filePath);
-        file.delete();
+    public static void saveGameState(List<String> guesses, List<String> responses) throws IOException {
+        String gameState = formatGameState(guesses, responses);
+        updateGameStateFile(gameState);
+    }
+
+    private static String formatGameState(List<String> guesses, List<String> responses) {
+        StringBuilder sb = new StringBuilder();
+    
+        for (int i = 0; i < guesses.size(); i++) {
+            sb.append(guesses.get(i)); 
+            sb.append(", ").append(responses.get(i)); 
+    
+            if (i < guesses.size() - 1) {
+                sb.append(" "); 
+            }
+        }
+        return sb.toString();
+    }
+    
+    /**
+     * Updates the game state file if the user already has an existing game state.
+     */
+    private static void updateGameStateFile(String gameState) throws IOException {
+        List<String> lines = new ArrayList<>();
+        boolean updated = false;
+    
+        try (BufferedReader reader = new BufferedReader(new FileReader(GAME_STATE_FILE))) {
+            String line;
+    
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("\\|");
+                if (parts[0].equals(gameState.split("\\|")[0])) { // check if username matches
+                    lines.add(line + gameState.substring(parts[0].length())); // append game state to existing line
+                    updated = true; // mark as updated
+                } else {
+                    lines.add(line); // keep existing entry
+                }
+            }
+        }
+    
+        if (!updated) { 
+            lines.add(gameState); 
+        }
+    
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(GAME_STATE_FILE))) {
+            for (String l : lines) 
+                writer.write(l); // write each line back to the file   
+                writer.newLine();         
+        }
+    }
+
+    public static String loadGameState(String username) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(GAME_STATE_FILE));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] parts = line.split("\\|");
+            if (parts[0].equals(username)) {
+                return line;
+            }
+        }
+        return null;
+    }
+
+    public static void deleteGameState(String username) throws IOException {
+        List<String> lines = new ArrayList<>();
+
+        BufferedReader reader = new BufferedReader(new FileReader(GAME_STATE_FILE));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] parts = line.split("\\|");
+            if (!parts[0].equals(username)) {
+                lines.add(line);
+            }
+        }
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter(GAME_STATE_FILE));
+        for (String l : lines) {
+            writer.write(l);
+        }
+        writer.close();
+        reader.close();
     }
 }
