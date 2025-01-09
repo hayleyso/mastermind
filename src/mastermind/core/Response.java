@@ -57,7 +57,7 @@ public class Response {
 
     @Override
     public String toString() {
-        return response.getKey() + "B" + response.getValue() + "W";
+        return "B" + response.getKey() + "B" + "W" + response.getValue();
     }
 
 }

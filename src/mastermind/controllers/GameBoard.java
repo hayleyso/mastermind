@@ -100,12 +100,12 @@ public class GameBoard {
             generatedCode = Code.generateRandomCode();
             hideCode();
             text.setText("Please enter your guess.");
-            Utils.addNameStateAndCode(username, mode, generatedCode);
+            Utils.saveToFile(username, mode, generatedCode);
         }
         if ("create".equals(mode)) {
             createLevel = state.getCreateDifficultyLevel();
             text.setText("Please create your code.");
-            Utils.addNameStateAndLevel(username, mode, createLevel);
+            Utils.saveToFile(username, mode, createLevel);
         }
         startTime = System.currentTimeMillis();
 
@@ -142,7 +142,7 @@ public class GameBoard {
             yellowButton.setOnAction(event -> addColorToCreateGrid(Code.Color.YELLOW));
             orangeButton.setOnAction(event -> addColorToCreateGrid(Code.Color.ORANGE));
             purpleButton.setOnAction(event -> addColorToCreateGrid(Code.Color.PURPLE));
-            checkButton.setOnAction(event -> submitCode());
+            // checkButton.setOnAction(event -> submitCode());
             resetButton.setOnAction(event -> resetCreate());
         } else if ("guess".equals(mode)) {
             greenButton.setOnAction(event -> addColorToGuessGrid(Code.Color.GREEN));
@@ -213,7 +213,7 @@ public class GameBoard {
         responses.add(response.toString());
 
         try {
-            Utils.saveGameState(guesses, responses);
+            Utils.saveGameState(username, currentGuessRow, guesses, responses);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -352,62 +352,9 @@ public class GameBoard {
         // TODO add help window popup
     }
 
-    public void loadSavedGame() throws IOException {
-        String savedState = Utils.loadGameState(username);
-        if (savedState != null) {
-            String[] parts = savedState.split("\\|");
-            mode = parts[1];
-            if ("guess".equals(mode)) {
-                generatedCode = new Code(Arrays.stream(parts[2].split(","))
-                        .mapToInt(Integer::parseInt)
-                        .boxed()
-                        .collect(Collectors.toList()));
-                hideCode();
-            } else if ("create".equals(mode)) {
-                createLevel = parts[2];
-            }
-
-            for (int i = 3; i < parts.length; i++) {
-                String[] guessResponse = parts[i].split(",");
-                String guess = String.join(",", Arrays.copyOfRange(guessResponse, 0, Mastermind.CODE_LENGTH));
-                String response = String.join(",",
-                        Arrays.copyOfRange(guessResponse, Mastermind.CODE_LENGTH, guessResponse.length));
-
-                repopulateGuess(guess);
-                repopulateResponse(response);
-
-                currentGuessRow++;
-            }
-            text.setText("Game loaded. Please continue playing.");
-            setUpButtons();
-        }
+    private void loadGameState() {
+        
     }
-
-    private void repopulateGuess(String guess) {
-        String[] colors = guess.split(",");
-        for (int i = 0; i < colors.length; i++) {
-            Code.Color color = Code.Color.values()[Integer.parseInt(colors[i])];
-            displayColors(color, guessGrid, i, currentGuessRow);
-        }
-        currentGuessColumn = Mastermind.CODE_LENGTH;
-    }
-
-    private void repopulateResponse(String response) {
-        String[] pegs = response.split(",");
-        List<Circle> pegCircles = new ArrayList<>();
-        for (String peg : pegs) {
-            Circle circle = new Circle(4);
-            circle.setFill("BLACK".equals(peg) ? Color.BLACK : Color.WHITE);
-            circle.setStroke(Color.BLACK);
-            circle.setStrokeWidth(1.5);
-            pegCircles.add(circle);
-        }
-        Collections.shuffle(pegCircles);
-
-        for (int i = 0; i < pegCircles.size(); i++) {
-            responseGrid.add(pegCircles.get(i), i % 2, currentResponseRow + i / 2);
-        }
-        currentResponseRow += 2;
-    }
+    
 
 }
