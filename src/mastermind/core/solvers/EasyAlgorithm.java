@@ -5,7 +5,5 @@ import mastermind.core.Code;
 import mastermind.core.Response;
 
 public class EasyAlgorithm {
-
-
     
 }

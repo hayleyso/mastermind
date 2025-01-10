@@ -17,6 +17,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.classfile.components.ClassPrinter.Node;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -74,8 +75,8 @@ public class GameBoard {
     private int currentCreateColumn;
     private int currentResponseRow;
 
-    private int blackPegs;
-    private int whitePegs;
+    private int numBlack;
+    private int numWhite;
 
     private long startTime;
     private long endTime;
@@ -173,7 +174,7 @@ public class GameBoard {
             purpleButton.setOnAction(event -> addColorToCreateGrid(Code.Color.PURPLE));
             checkButton.setOnAction(event -> submitResponse());
             resetButton.setOnAction(event -> resetResponse());
-
+            
             if (isGameFinished) {
                 checkButton.setOnAction(event -> submitCode());
                 resetButton.setOnAction(event -> resetCreate());
@@ -365,8 +366,20 @@ public class GameBoard {
         // display text any errors
     }
 
+    // get the # of black and white pegs per guess
     private void submitResponse() {
-
+        for (int i = 0; i < responseGrid.getRowCount(); i++) {
+            for (int j = 0; j < responseGrid.getColumnCount(); j++) {
+                Circle peg = (Circle) Utils.getNodeByRowColumnIndex(responseGrid, i, j);
+                if (peg.getFill().equals(Color.BLACK)) {
+                    numBlack++;
+                } else if (peg.getFill().equals(Color.WHITE)) {
+                    numWhite++;
+                }
+            }
+        }
+        currentResponseRow += 2;      
+        System.out.println(numBlack + " " + numWhite);
     }
 
     private void resetResponse() {
