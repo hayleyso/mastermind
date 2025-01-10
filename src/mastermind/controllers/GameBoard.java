@@ -111,11 +111,13 @@ public class GameBoard {
         if ("guess".equals(mode)) {
             generatedCode = Code.generateRandomCode();
             hideCode();
+            revealCode();
             text.setText("Please enter your guess.");
             Utils.saveToFile(username, mode, generatedCode);
             responseButtons.setVisible(false);
         }
         if ("create".equals(mode)) {
+            isGameFinished = false;
             createLevel = state.getCreateDifficultyLevel();
             text.setText("Press check to start the game.");
             Utils.saveToFile(username, mode, createLevel);
@@ -166,22 +168,22 @@ public class GameBoard {
             resetButton.setOnAction(event -> resetGuess());
         }
         if ("create".equals(mode)) {
-            greenButton.setOnAction(event -> addColorToCreateGrid(Code.Color.GREEN));
-            redButton.setOnAction(event -> addColorToCreateGrid(Code.Color.RED));
-            blueButton.setOnAction(event -> addColorToCreateGrid(Code.Color.BLUE));
-            yellowButton.setOnAction(event -> addColorToCreateGrid(Code.Color.YELLOW));
-            orangeButton.setOnAction(event -> addColorToCreateGrid(Code.Color.ORANGE));
-            purpleButton.setOnAction(event -> addColorToCreateGrid(Code.Color.PURPLE));
             checkButton.setOnAction(event -> submitResponse());
             resetButton.setOnAction(event -> resetResponse());
-            
+
             if (isGameFinished) {
+                greenButton.setOnAction(event -> addColorToCreateGrid(Code.Color.GREEN));
+                redButton.setOnAction(event -> addColorToCreateGrid(Code.Color.RED));
+                blueButton.setOnAction(event -> addColorToCreateGrid(Code.Color.BLUE));
+                yellowButton.setOnAction(event -> addColorToCreateGrid(Code.Color.YELLOW));
+                orangeButton.setOnAction(event -> addColorToCreateGrid(Code.Color.ORANGE));
+                purpleButton.setOnAction(event -> addColorToCreateGrid(Code.Color.PURPLE));
                 checkButton.setOnAction(event -> submitCode());
                 resetButton.setOnAction(event -> resetCreate());
             }
-            blackButton.setOnAction(event -> addColorToResponse(Color.BLACK));
-            whiteButton.setOnAction(event -> addColorToResponse(Color.WHITE));
-            noneButton.setOnAction(event -> addColorToResponse(Color.TRANSPARENT));
+            blackButton.setOnAction(event -> addResponse(Color.BLACK));
+            whiteButton.setOnAction(event -> addResponse(Color.WHITE));
+            noneButton.setOnAction(event -> addResponse(Color.TRANSPARENT));
         } 
     }
 
@@ -199,7 +201,7 @@ public class GameBoard {
         }
     }
 
-    private void addColorToResponse(Color color) {
+    private void addResponse(Color color) {
         if (currentResponseRow < 4 && currentResponseRow < Mastermind.NUM_GUESSES * 2) {
             int column = (currentResponseRow % 2);
             Circle peg = new Circle(4);
@@ -368,18 +370,19 @@ public class GameBoard {
 
     // get the # of black and white pegs per guess
     private void submitResponse() {
-        for (int i = 0; i < responseGrid.getRowCount(); i++) {
-            for (int j = 0; j < responseGrid.getColumnCount(); j++) {
-                Circle peg = (Circle) Utils.getNodeByRowColumnIndex(responseGrid, i, j);
-                if (peg.getFill().equals(Color.BLACK)) {
+        for (javafx.scene.Node node : responseGrid.getChildren()) {
+            if (node instanceof Circle) {
+                Circle peg = (Circle) node;
+                Color color = (Color) peg.getFill();
+                if (color.equals(Color.BLACK)) {
                     numBlack++;
-                } else if (peg.getFill().equals(Color.WHITE)) {
+                } else if (color.equals(Color.WHITE)) {
                     numWhite++;
                 }
             }
         }
         currentResponseRow += 2;      
-        System.out.println(numBlack + " " + numWhite);
+        text.setText("Your response has been recorded.");
     }
 
     private void resetResponse() {

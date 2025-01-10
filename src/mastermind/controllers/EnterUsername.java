@@ -42,11 +42,11 @@ public class EnterUsername {
         username = usernameField.getText();
         State.getInstance().setUsername(username);
 
-        //check if user has an unfinished game
+        // check if user has an unfinished game
         if (Utils.hasUnfinishedGame(username)) {
             showPopup(event);
         } else {
-            Utils.loadScene(event, "/mastermind/gui/fxml/SelectGameMode.fxml");
+            Utils.loadScene(event, "/mastermind/gui/fxml/GameOverview.fxml");
         }
     }
 

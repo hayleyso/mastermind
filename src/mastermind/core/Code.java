@@ -72,32 +72,37 @@ public class Code {
 
     public static Code generateRandomCode() {
         List<Integer> codeList = new ArrayList<>();
-        List<Integer> uniqueColors = new ArrayList<>();
-
+        Set<Integer> uniqueColors = new HashSet<>(); 
         Random random = new Random();
         String level = State.getInstance().getGuessDifficultyLevel();
         int numColors;
     
         switch (level) {
-            case "easy": numColors = random.nextInt(2) + 2; break;
+            case "easy": numColors = random.nextInt(3) + 1; break;
             case "medium": numColors = random.nextInt(2) + 3; break;
-            case "hard": numColors = random.nextInt(2) + 4; break;
+            case "hard": numColors = 4; break;
             default: numColors = 4; 
         }
     
         while (uniqueColors.size() < numColors) {
-            int color = random.nextInt(Color.values().length);
-            if (!uniqueColors.contains(color)) {
-                uniqueColors.add(color);
+            uniqueColors.add(random.nextInt(Color.values().length)); 
+        }
+    
+        List<Integer> colorList = new ArrayList<>(uniqueColors);
+        
+        if (level.equals("easy")) {
+            while (codeList.size() < Mastermind.CODE_LENGTH) {
+                codeList.add(colorList.get(random.nextInt(colorList.size())));
+            }
+        } else {
+            Collections.shuffle(colorList);
+            for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
+                codeList.add(colorList.get(i % colorList.size()));
             }
         }
-    
-        for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
-            codeList.add(uniqueColors.get(random.nextInt(numColors)));
-        }
-    
         return new Code(codeList);
-    }
+    }    
+    
 
     @Override
     public String toString() {

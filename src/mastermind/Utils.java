@@ -1,9 +1,7 @@
 package mastermind;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -17,7 +15,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import mastermind.controllers.GameBoard;
 import mastermind.core.Code;
 
 public class Utils {
@@ -111,17 +108,6 @@ public class Utils {
         long minutes = timeTaken / 60000;
         long seconds = (timeTaken % 60000) / 1000;
         return String.format("%d:%02d", minutes, seconds);
-    }
-
-    public static Node getNodeByRowColumnIndex(GridPane grid, final int row, final int column) {
-        Node result = null;
-        for (Node node : grid.getChildren()) {
-            if (GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == column) {
-                result = node;
-                break;
-            }
-        }
-        return result;
     }
 
 }

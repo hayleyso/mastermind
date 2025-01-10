@@ -70,7 +70,7 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
       </GridPane>
-      <ImageView fitHeight="429.0" fitWidth="50.0" layoutX="512.75" layoutY="65.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="429.0" fitWidth="43.0" layoutX="513.0" layoutY="65.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../../../../../../../Pictures/Screenshots/Screenshot%202025-01-10%20115503.png" />
          </image>
