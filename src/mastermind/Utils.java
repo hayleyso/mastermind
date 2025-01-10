@@ -8,7 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -17,10 +16,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import mastermind.controllers.GameBoard;
 import mastermind.core.Code;
 
 public class Utils {
-    private static final String DIRECTORY_PATH = "src/mastermind/data/users/";
+    public static final String DIRECTORY_PATH = "src/mastermind/data/users/";
     private static final String CREATE_LEADERBOARD_FILE = "src/mastermind/data/create leaderboard.txt";
     private static final String GUESS_LEADERBOARD_FILE = "src/mastermind/data/guess leaderboard.txt";
 
@@ -29,14 +29,14 @@ public class Utils {
         Parent parent = loader.load();
         Scene scene = new Scene(parent);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
+     
         window.setScene(scene);
         window.show();
 
         return loader.getController();
     }
 
-    public static Color getColor(Code.Color color) {
+    public static Color getGUIColor(Code.Color color) {
         switch (color) {
             case GREEN:
                 return Color.SEAGREEN;
@@ -65,7 +65,6 @@ public class Utils {
         file.setWritable(true);
     }
 
-    
     public static boolean hasUnfinishedGame(String username) throws IOException {
         Path path = Paths.get(DIRECTORY_PATH + username + ".txt");
         return path.toFile().exists();
@@ -83,7 +82,6 @@ public class Utils {
         writer.close();
     }
 
-
     public static void saveToFile(String username, String mode, String level) throws IOException {
         File file = new File(DIRECTORY_PATH + username + ".txt");
         file.setWritable(true);
@@ -92,17 +90,17 @@ public class Utils {
         }
         FileWriter writer = new FileWriter(file, true);
         writer.write(mode + "\n" + level + "\n");
+        writer.close();
     }
 
-    
-    public static void saveGameState(String username, int row, List<String> guesses, List<String> responses) throws IOException {
+    public static void saveGameState(String username, int row, List<String> guesses, List<String> responses)
+            throws IOException {
         File file = new File(DIRECTORY_PATH + username + ".txt");
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) { // Append mode
-            writer.write(guesses.get(row) + "|" + responses.get(row) + "\n"); 
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
+            writer.write(guesses.get(row) + "|" + responses.get(row) + "\n");
         }
     }
-    
-    
+
     public static void deleteGameState(String username) throws IOException {
         File file = new File(DIRECTORY_PATH + username + ".txt");
         file.delete();
@@ -113,4 +111,5 @@ public class Utils {
         long seconds = (timeTaken % 60000) / 1000;
         return String.format("%d:%02d", minutes, seconds);
     }
+
 }

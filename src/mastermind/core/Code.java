@@ -7,11 +7,6 @@ public class Code {
     public enum Color {
         GREEN, RED, BLUE, YELLOW, ORANGE, PURPLE;
 
-        /**
-         * 
-         * @param index
-         * @return
-         */
         public static Color fromIndex(final int index) {
             return Color.values()[index];
         }
@@ -28,10 +23,6 @@ public class Code {
 
     private final ArrayList<Color> code;
 
-    /**
-     * 
-     * @param code
-     */
     public Code(final List<Integer> code) {
         ArrayList<Color> codeBuilder = new ArrayList<>(code.size());
         for (final int color : code) {
@@ -40,11 +31,7 @@ public class Code {
         this.code = codeBuilder;
     }
 
-    /**
-     * 
-     * @param index
-     * @return
-     */
+
     public Color getColor(final int index) {
         return code.get(index);
     }
@@ -61,10 +48,7 @@ public class Code {
         return new ArrayList<>(code);
     }
 
-    /**
-     * 
-     * @return
-     */
+   
     public HashMap<Color, Integer> getOccurrences() {
         HashMap<Color, Integer> occurrences = new HashMap<>();
         for (Color color : Color.values()) {
@@ -76,30 +60,42 @@ public class Code {
         return occurrences;
     }
 
-    /**
-     * 
-     * @param index
-     * @return
-     */
+   
     public static boolean isValidColorIndex(int index) {
         return index >= 0 && index < Color.values().length;
     }
 
-    /**
-     * 
-     * @param other
-     * @return
-     */
+  
     public boolean equals(Code other) {
         return this.code.equals(other.getColors());
     }
 
     public static Code generateRandomCode() {
         List<Integer> codeList = new ArrayList<>();
+        List<Integer> uniqueColors = new ArrayList<>();
+
         Random random = new Random();
-        for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
-            codeList.add(random.nextInt(Color.values().length));
+        String level = State.getInstance().getGuessDifficultyLevel();
+        int numColors;
+    
+        switch (level) {
+            case "easy": numColors = random.nextInt(2) + 2; break;
+            case "medium": numColors = random.nextInt(2) + 3; break;
+            case "hard": numColors = random.nextInt(2) + 4; break;
+            default: numColors = 4; 
         }
+    
+        while (uniqueColors.size() < numColors) {
+            int color = random.nextInt(Color.values().length);
+            if (!uniqueColors.contains(color)) {
+                uniqueColors.add(color);
+            }
+        }
+    
+        for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
+            codeList.add(uniqueColors.get(random.nextInt(numColors)));
+        }
+    
         return new Code(codeList);
     }
 

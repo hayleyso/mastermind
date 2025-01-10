@@ -2,11 +2,11 @@ package mastermind.core;
 
 public class State {
     private static volatile State instance;
-    
     private String username;
     private String mode;
     private String createLevel;
     private String guessLevel;
+    private boolean gameFinished;
 
     private State() {}
 
@@ -51,5 +51,13 @@ public class State {
 
     public void setGameMode(String gameMode) {
         this.mode = gameMode;
+    }
+
+    public void setGameFinished(boolean isGameFinished) {
+        this.gameFinished = isGameFinished;
+    }    
+
+    public boolean isGameFinished() {
+        return gameFinished;
     }
 }

@@ -34,11 +34,9 @@ public class PopupWindow {
 
     @FXML
     void onReturnBtnClick(ActionEvent event) {
+        State.getInstance().setGameFinished(false);
         Stage stage = (Stage) button.getScene().getWindow();
-        stage.close();
-
-        
-        
+        stage.close();        
     }
     
 }
