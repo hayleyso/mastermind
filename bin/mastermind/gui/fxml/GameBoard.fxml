@@ -12,7 +12,7 @@
 
 <AnchorPane layoutY="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="630.0" prefWidth="840.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mastermind.controllers.GameBoard">
    <children>
-      <ImageView fx:id="img" fitHeight="815.0" fitWidth="742.0" layoutX="53.0" layoutY="-168.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="30.2574462890625" AnchorPane.leftAnchor="53.0" AnchorPane.rightAnchor="45.0" AnchorPane.topAnchor="-168.0">
+      <ImageView fx:id="img" fitHeight="815.0" fitWidth="742.0" layoutX="53.0" layoutY="-168.0" nodeOrientation="INHERIT" preserveRatio="true" style="-fx-background: white;" AnchorPane.bottomAnchor="30.2574462890625" AnchorPane.leftAnchor="53.0" AnchorPane.rightAnchor="45.0" AnchorPane.topAnchor="-168.0">
          <image>
             <Image url="@../img/background/GameBoard.png" />
          </image>
@@ -59,7 +59,7 @@
             <RowConstraints maxHeight="54.5" minHeight="10.0" prefHeight="48.0" vgrow="SOMETIMES" />
         </rowConstraints>
       </GridPane>
-      <GridPane fx:id="createGrid" layoutX="356.0" layoutY="502.0" prefHeight="47.0" prefWidth="152.0">
+      <GridPane fx:id="createGrid" layoutX="368.0" layoutY="502.0" prefHeight="47.0" prefWidth="129.0">
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -121,26 +121,17 @@
             </ImageView>
          </graphic>
       </Button>
-      <GridPane fx:id="responseButtons" layoutX="291.0" layoutY="445.0" prefHeight="75.0" prefWidth="38.0">
+      <GridPane fx:id="responseButtons" layoutX="290.0" layoutY="445.0" prefHeight="59.0" prefWidth="43.0">
         <columnConstraints>
           <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="whiteButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: white;" GridPane.rowIndex="1" />
-            <Button fx:id="noneButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" GridPane.rowIndex="2">
-               <graphic>
-                  <ImageView fitHeight="15.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../img/icons/none.png" />
-                     </image>
-                  </ImageView>
-               </graphic></Button>
             <Button fx:id="blackButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: black;" />
+            <Button fx:id="whiteButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: white;" GridPane.rowIndex="1" />
          </children>
       </GridPane>
    </children>

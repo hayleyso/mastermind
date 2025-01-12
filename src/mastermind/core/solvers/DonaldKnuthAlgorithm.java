@@ -1,9 +1,12 @@
 package mastermind.core.solvers;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import javafx.util.Pair;
 import mastermind.Mastermind;
-import mastermind.core.*;
+import mastermind.core.Code;
+import mastermind.core.Response;
 
 public class DonaldKnuthAlgorithm extends MastermindAlgorithm {
     private ArrayList<Code> possibleCodes;
@@ -44,64 +47,10 @@ public class DonaldKnuthAlgorithm extends MastermindAlgorithm {
         return currentGuess;
     }
 
-    public Pair<Integer, Integer> getMatch(final Code code, final Code guess) {
-        final Pair<Integer, Integer> response; 
-        final List<String> pegColors = new ArrayList<>(Mastermind.CODE_LENGTH); 
-
-        int correctCount = 0;
-        int misplacedCount = 0;
-
-        HashMap<Code.Color, Integer> codeOccurrences = code.getOccurrences();
-        boolean[] guessedCorrectly = new boolean[Mastermind.CODE_LENGTH];
-
-        for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
-            Code.Color guessColor = guess.getColor(i);
-            Code.Color codeColor = code.getColor(i);
-
-            if (guessColor == codeColor) {
-                correctCount++;
-                guessedCorrectly[i] = true; 
-                pegColors.add("BLACK");
-                codeOccurrences.put(codeColor, codeOccurrences.get(codeColor) - 1);
-            } else {
-                pegColors.add(null); 
-            }
-        }
-
-        for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
-            if (!guessedCorrectly[i]) { 
-                Code.Color guessColor = guess.getColor(i);
-                if (codeOccurrences.get(guessColor) > 0) {
-                    misplacedCount++;
-                    pegColors.set(i, "WHITE"); 
-                    codeOccurrences.put(guessColor, codeOccurrences.get(guessColor) - 1);
-                } else if (pegColors.get(i) == null) {
-                    pegColors.set(i, "NONE");
-                }
-            }
-        }
-        response = new Pair<>(correctCount, misplacedCount);
-        return response;
-    }
-
-    public void removeImpossibleCodes(Response response) {
-        Pair<Integer, Integer> code = response.getResponse();
-        Pair<Integer, Integer> check;
-        int offset = 0;
-
-        for (int i = 0; i < possibleCodes.size(); i++) {
-            check = getMatch(currentGuess, possibleCodes.get(i - offset));
-
-            if (!(code.getKey() == check.getKey()) || !(code.getValue() == check.getValue())) {
-                possibleCodes.remove(i - offset);
-                offset++;
-            }
-        }
-    }
-
     @Override
-    public Code guess() {
+    public Code guess(Code guess, Pair<Integer, Integer> respones) {
+        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'guess'");
     }
-    
-}
+
+}    

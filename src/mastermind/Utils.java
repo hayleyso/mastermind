@@ -14,7 +14,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import mastermind.core.Code;
 
 public class Utils {
@@ -109,5 +111,39 @@ public class Utils {
         long seconds = (timeTaken % 60000) / 1000;
         return String.format("%d:%02d", minutes, seconds);
     }
+
+    
+    public static Pair<Integer, Integer> countResponsePegs(GridPane responseGrid, int currentResponseRow) {
+        int numBlack = 0;
+        int numWhite = 0;
+        int startRow = currentResponseRow;
+        
+        for (int col = 0; col < 2; col++) {
+            for (int row = startRow; row <= startRow + 1; row++) {
+                Node node = getNodeFromGridPane(responseGrid, col, row);
+                if (node instanceof Circle) {
+                    Circle peg = (Circle) node;
+                    if (peg.getFill().equals(Color.BLACK)) {
+                        numBlack++;
+                    } else if (peg.getFill().equals(Color.WHITE)) {
+                        numWhite++;
+                    }
+                }
+            }
+        }
+        
+        return new Pair<>(numBlack, numWhite);
+    }
+    
+    private static Node getNodeFromGridPane(GridPane gridPane, int col, int row) {
+        for (Node node : gridPane.getChildren()) {
+            if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
+                return node;
+            }
+        }
+        return null;
+    }
+    
+    
 
 }

@@ -44,6 +44,15 @@ public class Code {
         return colorList;
     }
 
+    public List<Integer> getCodeInDigits() {
+        List<Integer> codeList = new ArrayList<>();
+        for (Color color : code) {
+            codeList.add(color.ordinal());
+        }
+        return codeList;
+    }
+    
+
     public ArrayList<Color> getColors() {
         return new ArrayList<>(code);
     }

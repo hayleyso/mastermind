@@ -1,22 +1,29 @@
 package mastermind.core.solvers;
 
 import javafx.util.Pair;
+import mastermind.Mastermind;
 import mastermind.core.Code;
-import mastermind.core.Response;
 
 public abstract class MastermindAlgorithm {
+    private int attempts;
+
+    public int getAttempts() {
+        return attempts;
+    }
+
+    public boolean hasReachedMaxGuesses() {
+         if (attempts == Mastermind.NUM_GUESSES) {
+            return true;
+        } else {
+            attempts++;
+            return false;
+        }
+    }
+
+    protected boolean isInitialGuess() {
+        return attempts == 0;
+    }
    
-    public abstract Code guess();
-    
-    //public abstract Pair<Status, Code> guess(final Response response);
+    public abstract Code guess(Pair<Integer, Integer> response);
 
-    protected String difficultyLevel;
-
-    public void setDifficultyLevel(String level) {
-        this.difficultyLevel = level;
-    }
-
-    public String getDifficultyLevel() {
-        return this.difficultyLevel;
-    }
 }

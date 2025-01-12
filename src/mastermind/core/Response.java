@@ -47,6 +47,7 @@ public class Response {
         response = new Pair<>(correctCount, misplacedCount);
     }
 
+
     public Pair<Integer, Integer> getResponse() {
         return this.response;
     }
@@ -59,5 +60,6 @@ public class Response {
     public String toString() {
         return "B" + response.getKey() + "B" + "W" + response.getValue();
     }
+
 
 }

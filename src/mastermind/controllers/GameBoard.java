@@ -7,62 +7,42 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import javafx.util.Pair;
 import mastermind.Mastermind;
 import mastermind.Utils;
 import mastermind.core.Code;
 import mastermind.core.State;
 import mastermind.core.Response;
+import mastermind.core.solvers.DonaldKnuthAlgorithm;
+import mastermind.core.solvers.EasyAlgorithm;
 import mastermind.core.solvers.MastermindAlgorithm;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.lang.classfile.components.ClassPrinter.Node;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class GameBoard {
-    @FXML
-    protected Button greenButton;
-    @FXML
-    protected Button redButton;
-    @FXML
-    protected Button blueButton;
-    @FXML
-    protected Button yellowButton;
-    @FXML
-    protected Button orangeButton;
-    @FXML
-    protected Button purpleButton;
-    @FXML
-    protected Button checkButton;
-    @FXML
-    protected Button resetButton;
-    @FXML
-    protected Button blackButton;
-    @FXML
-    protected Button whiteButton;
-    @FXML
-    protected Button noneButton;
-    @FXML
-    protected Button nextButton;
-    @FXML
-    protected Button questionButton;
-    @FXML
-    protected GridPane guessGrid;
-    @FXML
-    protected GridPane createGrid;
-    @FXML
-    protected GridPane responseGrid;
-    @FXML
-    protected GridPane responseButtons; 
-    @FXML
-    protected Text text;
-    
+    @FXML protected Button greenButton;
+    @FXML protected Button redButton;
+    @FXML protected Button blueButton;
+    @FXML protected Button yellowButton;
+    @FXML protected Button orangeButton;
+    @FXML protected Button purpleButton;
+    @FXML protected Button checkButton;
+    @FXML protected Button resetButton;
+    @FXML protected Button blackButton;
+    @FXML protected Button whiteButton;
+    @FXML protected Button nextButton;
+    @FXML protected Button questionButton;
+    @FXML protected GridPane guessGrid;
+    @FXML protected GridPane createGrid;
+    @FXML protected GridPane responseGrid;
+    @FXML protected GridPane responseButtons;
+    @FXML protected Text text;
+
     private String username;
     private String mode;
     private String guessLevel;
     private String createLevel;
+    private Pair<Integer, Integer> pegCounts;
     private List<String> guesses = new ArrayList<>();
     private List<String> responses = new ArrayList<>();
 
@@ -74,7 +54,11 @@ public class GameBoard {
     private int currentGuessColumn;
     private int currentCreateColumn;
     private int currentResponseRow;
+    private int currentResponseColumn;
 
+    private int tempResponseRow;
+
+    private int numPegs;
     private int numBlack;
     private int numWhite;
 
@@ -99,19 +83,11 @@ public class GameBoard {
         currentGuessColumn = 0;
         currentCreateColumn = 0;
         currentResponseRow = 0;
-
-        for (int i = 0; i < responseGrid.getRowCount(); i++) {
-            for (int j = 0; j < responseGrid.getColumnCount(); j++) {
-                Circle peg = new Circle(4);
-                peg.setFill(Color.PALETURQUOISE);
-                responseGrid.add(peg, j, i);
-            }
-        }
+        // numPegs = 0;
 
         if ("guess".equals(mode)) {
             generatedCode = Code.generateRandomCode();
             hideCode();
-            revealCode();
             text.setText("Please enter your guess.");
             Utils.saveToFile(username, mode, generatedCode);
             responseButtons.setVisible(false);
@@ -120,17 +96,32 @@ public class GameBoard {
             isGameFinished = false;
             createLevel = state.getCreateDifficultyLevel();
             text.setText("Press check to start the game.");
+            createLevel = state.getCreateDifficultyLevel();
+
+            solver = switch (createLevel.toLowerCase()) {
+                case "easy" -> new EasyAlgorithm();
+                // case "medium" -> new MediumAlgorithm();
+                case "hard" -> new DonaldKnuthAlgorithm();
+                default -> new EasyAlgorithm();
+            };
+
+            blackButton.setDisable(true);
+            whiteButton.setDisable(true);
+            resetButton.setDisable(true);
+
+            // disable color buttons
+            Button[] colorButtons = { greenButton, redButton, blueButton, yellowButton, orangeButton, purpleButton };
+            for (Button button : colorButtons) {
+                button.setDisable(true);
+            }
+
             Utils.saveToFile(username, mode, createLevel);
-            // disable color button until user returns all black or
-            // if attempts == 10
         }
+
         startTime = System.currentTimeMillis();
 
         setUpButtons();
         handleButtonActions();
-
-        // add overwriting if the user already has a game in progress
-        // and does not finish again
     }
 
     private void setUpButtons() {
@@ -140,11 +131,11 @@ public class GameBoard {
             button.setMinSize(30, 30);
             button.setMaxSize(30, 30);
         }
-        Button[] responseButtons = { blackButton, whiteButton, noneButton };
+        Button[] responseButtons = { blackButton, whiteButton };
         for (Button button : responseButtons) {
-            button.setShape(new Circle(6));
-            button.setMinSize(15, 15);
-            button.setMaxSize(15, 15);
+            button.setShape(new Circle(10));
+            button.setMinSize(20, 20);
+            button.setMaxSize(20, 20);
         }
         resetButton.setShape(new Circle(20));
         resetButton.setMinSize(44, 44);
@@ -169,9 +160,11 @@ public class GameBoard {
         }
         if ("create".equals(mode)) {
             checkButton.setOnAction(event -> submitResponse());
-            resetButton.setOnAction(event -> resetResponse());
+            blackButton.setOnAction(event -> addResponse(Color.BLACK));
+            whiteButton.setOnAction(event -> addResponse(Color.WHITE));
+            resetButton.setOnAction(event -> resetResponse());    
 
-            if (isGameFinished) {
+           if (isGameFinished) {
                 greenButton.setOnAction(event -> addColorToCreateGrid(Code.Color.GREEN));
                 redButton.setOnAction(event -> addColorToCreateGrid(Code.Color.RED));
                 blueButton.setOnAction(event -> addColorToCreateGrid(Code.Color.BLUE));
@@ -181,13 +174,10 @@ public class GameBoard {
                 checkButton.setOnAction(event -> submitCode());
                 resetButton.setOnAction(event -> resetCreate());
             }
-            blackButton.setOnAction(event -> addResponse(Color.BLACK));
-            whiteButton.setOnAction(event -> addResponse(Color.WHITE));
-            noneButton.setOnAction(event -> addResponse(Color.TRANSPARENT));
-        } 
+        }
     }
 
-    protected void addColorToCreateGrid(Code.Color color) {
+    private void addColorToCreateGrid(Code.Color color) {
         if (currentCreateColumn < Mastermind.CODE_LENGTH) {
             displayColors(color, createGrid, currentCreateColumn, 0);
             currentCreateColumn++;
@@ -198,20 +188,6 @@ public class GameBoard {
         if (currentGuessColumn < Mastermind.CODE_LENGTH && currentGuessRow <= Mastermind.NUM_GUESSES) {
             displayColors(color, guessGrid, currentGuessColumn, currentGuessRow);
             currentGuessColumn++;
-        }
-    }
-
-    private void addResponse(Color color) {
-        if (currentResponseRow < 4 && currentResponseRow < Mastermind.NUM_GUESSES * 2) {
-            int column = (currentResponseRow % 2);
-            Circle peg = new Circle(4);
-            peg.setFill(color);
-            if (color != Color.TRANSPARENT) {
-                peg.setStroke(Color.BLACK);
-                peg.setStrokeWidth(1.5);
-            }
-            responseGrid.add(peg, column, currentResponseRow/2);
-            currentResponseRow++;
         }
     }
 
@@ -251,20 +227,19 @@ public class GameBoard {
                                                             : -1);
         }
         Code userGuess = new Code(guessList);
-        Response response = new Response(generatedCode, userGuess);
-        displayResponse(response);
+        Response resp = new Response(generatedCode, userGuess);
+        displayResponse(resp);
 
         guesses.add(userGuess.toString());
-        responses.add(response.toString());
+        responses.add(resp.toString());
 
         try {
             Utils.saveGameState(username, currentGuessRow, guesses, responses);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
-        if (response.getResponse().getKey() == Mastermind.CODE_LENGTH) {
+        if (resp.getResponse().getKey() == Mastermind.CODE_LENGTH) {
             if (currentGuessRow == 0) {
                 text.setText("Congratulations! It took you " + (currentGuessRow + 1) + " guess.");
             } else {
@@ -281,7 +256,6 @@ public class GameBoard {
             try {
                 Utils.deleteGameState(username);
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             Utils.updateGuessLeaderBoard(username, currentGuessRow + 1, timeTaken);
@@ -289,7 +263,7 @@ public class GameBoard {
         } else {
             currentGuessRow++;
 
-            if (response.getResponse().getKey() == 0 && response.getResponse().getValue() == 0) {
+            if (resp.getResponse().getKey() == 0 && resp.getResponse().getValue() == 0) {
                 text.setText("None correct. " + (Mastermind.NUM_GUESSES - currentGuessRow) + " attempt" +
                         ((Mastermind.NUM_GUESSES - currentGuessRow) != 1 ? "s" : "") + " left.");
             } else {
@@ -306,7 +280,6 @@ public class GameBoard {
                 try {
                     Utils.deleteGameState(username);
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -314,8 +287,8 @@ public class GameBoard {
         currentGuessColumn = 0;
     }
 
-    private void displayResponse(Response response) {
-        List<String> pegColors = response.getPegColors();
+    private void displayResponse(Response resp) {
+        List<String> pegColors = resp.getPegColors();
         List<Circle> pegs = new ArrayList<>();
 
         for (String color : pegColors) {
@@ -327,7 +300,7 @@ public class GameBoard {
                 pegs.add(peg);
             }
         }
-        Collections.shuffle(pegs); // randomize display order
+        Collections.shuffle(pegs);
 
         int pegIndex = 0;
         for (Circle peg : pegs) {
@@ -340,7 +313,6 @@ public class GameBoard {
         currentResponseRow += 2;
     }
 
-    // only enable buttons at the end
     private void submitCode() {
         if (currentCreateColumn < Mastermind.CODE_LENGTH) {
             text.setText("Invalid. Please enter 4 colours.");
@@ -358,36 +330,94 @@ public class GameBoard {
                                                             ? Code.Color.PURPLE.ordinal()
                                                             : -1);
         }
-        // text.setText("Code created. The computer will now try to guess it.");
         disableButtons();
         Code userCode = new Code(codeList);
-
-        // implement method that compares to previous guesses
-        // gets response
-        // compares response to the user's entered response
-        // display text any errors
     }
 
-    // get the # of black and white pegs per guess
-    private void submitResponse() {
-        for (javafx.scene.Node node : responseGrid.getChildren()) {
-            if (node instanceof Circle) {
-                Circle peg = (Circle) node;
-                Color color = (Color) peg.getFill();
-                if (color.equals(Color.BLACK)) {
-                    numBlack++;
-                } else if (color.equals(Color.WHITE)) {
-                    numWhite++;
-                }
-            }
+    private void addResponse(Color color) {
+        if (numPegs < Mastermind.CODE_LENGTH) {
+            int column = numPegs % 2;
+            int row = tempResponseRow + (numPegs / 2);
+            
+            Circle peg = new Circle(4);
+            peg.setFill(color);
+            peg.setStroke(Color.BLACK);
+            peg.setStrokeWidth(1.5);
+    
+            responseGrid.add(peg, column, row);
+            numPegs++;
         }
-        currentResponseRow += 2;      
-        text.setText("Your response has been recorded.");
+    }
+    
+    private void resetResponse() {
+        responseGrid.getChildren().removeIf(node -> 
+            GridPane.getRowIndex(node) != null && 
+            (GridPane.getRowIndex(node) == tempResponseRow || 
+            GridPane.getRowIndex(node) == tempResponseRow + 1)
+        );
+        numPegs = 0;
+        tempResponseRow = currentResponseRow;
     }
 
-    private void resetResponse() {
-        responseGrid.getChildren().removeIf(node -> GridPane.getRowIndex(node) != null);
-        currentResponseRow = 0;
+    private void submitResponse() {
+        if (currentGuessRow == 0) {
+            Code firstGuess = solver.guess(null); 
+            displayGuess(firstGuess);
+            text.setText("Please add black and white pegs or press check again if no pegs correct colors." + '\n' +
+                "Press check again if no correct colors.");
+            whiteButton.setDisable(false);
+            blackButton.setDisable(false);
+            resetButton.setDisable(false);
+            currentGuessRow++;
+            return;
+        }
+
+        numPegs = numBlack = numWhite = 0;
+
+        // get the number of black and white pegs in the two rows
+        pegCounts = Utils.countResponsePegs(responseGrid, currentResponseRow);
+        System.out.println(currentResponseRow);
+        numBlack = pegCounts.getKey();
+        numWhite = pegCounts.getValue();
+        System.out.println("Black pegs: " + numBlack);
+        System.out.println("White pegs: " + numWhite);
+
+        Code nextGuess = solver.guess(pegCounts);
+        
+        if (numBlack == Mastermind.CODE_LENGTH) {
+            text.setText("The computer has succesfully guessed your code!");
+            blackButton.setDisable(true);
+            whiteButton.setDisable(true);
+            checkButton.setDisable(true);
+
+            // add the user's guess to create grid
+            for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
+                displayColors(nextGuess.getColor(i), createGrid, i, 0);
+            }
+
+            isGameFinished = true;
+            return;
+
+        } else if (solver.hasReachedMaxGuesses()) {
+            text.setText("The computer couldn't guess your code within the allowed attempts.");
+            isGameFinished = true;
+            return;
+        
+        } else if (currentGuessRow < Mastermind.NUM_GUESSES) {
+            displayGuess(nextGuess);
+            currentResponseRow += 2;
+            tempResponseRow = currentResponseRow;
+            currentResponseColumn = 0;
+            currentGuessRow++;
+            text.setText("The computer has made " + currentGuessRow + " guesses. Please provide feedback.");
+        }
+    }
+
+    // computer's guess
+    private void displayGuess(Code guess) {
+        for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
+            displayColors(guess.getColor(i), guessGrid, i, currentGuessRow);
+        }
     }
 
     private void hideCode() {
@@ -427,57 +457,58 @@ public class GameBoard {
         // one for create
     }
 
-    public void loadGameState() throws IOException {
-        username = state.getUsername();
-        File file = new File(Utils.DIRECTORY_PATH + username + ".txt");
+    // public void loadGameState() throws IOException {
+    //     username = state.getUsername();
+    //     File file = new File(Utils.DIRECTORY_PATH + username + ".txt");
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line;
-            currentGuessRow = 0;
+    //     try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+    //         String line;
+    //         currentGuessRow = 0;
 
-            mode = reader.readLine(); // first line
+    //         mode = reader.readLine(); // first line
 
-            if ("guess".equals(mode)) {
-                // second line for guess
-                generatedCode = new Code(Arrays.stream(reader.readLine().split(""))
-                        .map(s -> Code.Color.valueOf(s).ordinal())
-                        .collect(Collectors.toList()));
-               
-            } if ("create".equals(mode)) {
-                // second line for create
-                createLevel = reader.readLine();
-                
-            }
+    //         if ("guess".equals(mode)) {
+    //             // second line for guess
+    //             generatedCode = new Code(Arrays.stream(reader.readLine().split(""))
+    //                     .map(s -> Code.Color.valueOf(s).ordinal())
+    //                     .collect(Collectors.toList()));
 
-            // read the current guess and response
-            // for create mode also check if user has not responded yet
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split("\\|");
-                if (parts.length < 2)
-                    continue;
+    //         }
+    //         if ("create".equals(mode)) {
+    //             // second line for create
+    //             createLevel = reader.readLine();
 
-                String guess = parts[0];
-                String response = parts[1];
+    //         }
 
-                for (int j = 0; j < guess.length(); j++) {
-                    Code.Color color = Code.Color.valueOf(String.valueOf(guess.charAt(j)));
-                    displayColors(color, guessGrid, j, currentGuessRow);
-                }
+    //         // read the current guess and response
+    //         // for create mode also check if user has not responded yet
+    //         while ((line = reader.readLine()) != null) {
+    //             String[] parts = line.split("\\|");
+    //             if (parts.length < 2)
+    //                 continue;
 
-                List<Integer> colorIndices = Arrays.stream(guess.split(""))
-                        .map(s -> Code.Color.valueOf(s).ordinal())
-                        .collect(Collectors.toList());
+    //             String guess = parts[0];
+    //             String response = parts[1];
 
-                Response resp = new Response(generatedCode, new Code(colorIndices));
-                displayResponse(resp);
+    //             for (int j = 0; j < guess.length(); j++) {
+    //                 Code.Color color = Code.Color.valueOf(String.valueOf(guess.charAt(j)));
+    //                 displayColors(color, guessGrid, j, currentGuessRow);
+    //             }
 
-                guesses.add(guess);
-                responses.add(response);
-                currentGuessRow++;
-            }
-            currentGuessColumn = 0;
-        }
+    //             List<Integer> colorIndices = Arrays.stream(guess.split(""))
+    //                     .map(s -> Code.Color.valueOf(s).ordinal())
+    //                     .collect(Collectors.toList());
 
-    }
+    //             Response resp = new Response(generatedCode, new Code(colorIndices));
+    //             displayResponse(resp);
+
+    //             guesses.add(guess);
+    //             responses.add(response);
+    //             currentGuessRow++;
+    //         }
+    //         currentGuessColumn = 0;
+    //     }
+
+    // }
 
 }
