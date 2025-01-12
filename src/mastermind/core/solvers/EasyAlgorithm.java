@@ -1,47 +1,62 @@
 package mastermind.core.solvers;
 
-import javafx.scene.paint.Color;
 import javafx.util.Pair;
 import mastermind.Mastermind;
 import mastermind.core.Code;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class EasyAlgorithm extends MastermindAlgorithm {
     private static final Code.Color[] COLORS = Code.Color.values();
     private int currentColorIndex = 0;
     private Code lastGuess;
+    private boolean shufflingPhase = false;
+
+    @Override
+    public Code guess() {
+        lastGuess = new Code(Collections.nCopies(Mastermind.CODE_LENGTH, COLORS[0].ordinal()));
+        return lastGuess;
+    }
 
     @Override
     public Code guess(Pair<Integer, Integer> response) {
-        if (isInitialGuess()) {
-            lastGuess = new Code(Arrays.asList(
-                COLORS[0].ordinal(),
-                COLORS[0].ordinal(),
-                COLORS[0].ordinal(),
-                COLORS[0].ordinal()
-            ));
-            return lastGuess;
-        }
+        int totalPegs = response.getKey() + response.getValue();
 
-        // process feedback and generate next guess
-        currentColorIndex = (currentColorIndex + 1) % COLORS.length;
-        List<Integer> newGuess = new ArrayList<>();
-        
-        for (Code.Color color : lastGuess.getColors()) {
-            newGuess.add(color.ordinal());
-        }
-
-        // change one position to next color
-        for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
-            if (newGuess.get(i) != COLORS[currentColorIndex].ordinal()) {
-                newGuess.set(i, COLORS[currentColorIndex].ordinal());
-                break;
+        if (!shufflingPhase) {
+            // Keep the correct number of pegs from the previous guess
+            List<Integer> newGuess = new ArrayList<>();
+            for (Code.Color color : lastGuess.getColors().subList(0, totalPegs)) {
+                newGuess.add(color.ordinal());
             }
+            
+            // If we haven't found all colors yet, move to the next color for the remaining pegs
+            if (totalPegs < Mastermind.CODE_LENGTH) {
+                currentColorIndex++;
+                if (currentColorIndex >= COLORS.length) {
+                    currentColorIndex = 0;
+                }
+                
+                // Fill the remaining positions with the new color
+                while (newGuess.size() < Mastermind.CODE_LENGTH) {
+                    newGuess.add(COLORS[currentColorIndex].ordinal());
+                }
+            } else {
+                // If we have found all colors, start shuffling
+                shufflingPhase = true;
+            }
+            
+            lastGuess = new Code(newGuess);
+        } else {
+            // If in shuffling phase, rotate the colors
+            List<Integer> newGuess = new ArrayList<>();
+            for (Code.Color color : lastGuess.getColors()) {
+                newGuess.add(color.ordinal());
+            }
+            Collections.rotate(newGuess, 1);
+            lastGuess = new Code(newGuess);
         }
-        
-        lastGuess = new Code(newGuess);
+
         return lastGuess;
     }
 }

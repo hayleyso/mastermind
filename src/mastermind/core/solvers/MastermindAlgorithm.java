@@ -7,23 +7,16 @@ import mastermind.core.Code;
 public abstract class MastermindAlgorithm {
     private int attempts;
 
-    public int getAttempts() {
-        return attempts;
+    public abstract Code guess();
+    public abstract Code guess(Pair<Integer, Integer> response);
+
+    public boolean isInitialGuess() {
+        return attempts == 0;
     }
 
     public boolean hasReachedMaxGuesses() {
-         if (attempts == Mastermind.NUM_GUESSES) {
-            return true;
-        } else {
-            attempts++;
-            return false;
-        }
+        return attempts >= Mastermind.NUM_GUESSES;
     }
-
-    protected boolean isInitialGuess() {
-        return attempts == 0;
-    }
-   
-    public abstract Code guess(Pair<Integer, Integer> response);
 
 }
+

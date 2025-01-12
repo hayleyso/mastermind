@@ -40,7 +40,7 @@ public class GameBoard {
 
     private String username;
     private String mode;
-    private String guessLevel;
+    private String guessLevel; // for file input
     private String createLevel;
     private Pair<Integer, Integer> pegCounts;
     private List<String> guesses = new ArrayList<>();
@@ -54,8 +54,6 @@ public class GameBoard {
     private int currentGuessColumn;
     private int currentCreateColumn;
     private int currentResponseRow;
-    private int currentResponseColumn;
-
     private int tempResponseRow;
 
     private int numPegs;
@@ -93,7 +91,6 @@ public class GameBoard {
             responseButtons.setVisible(false);
         }
         if ("create".equals(mode)) {
-            isGameFinished = false;
             createLevel = state.getCreateDifficultyLevel();
             text.setText("Press check to start the game.");
             createLevel = state.getCreateDifficultyLevel();
@@ -108,20 +105,32 @@ public class GameBoard {
             blackButton.setDisable(true);
             whiteButton.setDisable(true);
             resetButton.setDisable(true);
-
-            // disable color buttons
             Button[] colorButtons = { greenButton, redButton, blueButton, yellowButton, orangeButton, purpleButton };
             for (Button button : colorButtons) {
                 button.setDisable(true);
             }
-
             Utils.saveToFile(username, mode, createLevel);
+
+
         }
 
         startTime = System.currentTimeMillis();
 
         setUpButtons();
         handleButtonActions();
+    }
+
+    private void enableButtonsForCodeReveal() {
+        checkButton.setDisable(false);
+        resetButton.setDisable(false);
+        whiteButton.setDisable(true);
+        blackButton.setDisable(true);
+        Button[] colorButtons = { greenButton, redButton, blueButton, yellowButton, orangeButton, purpleButton };
+        for (Button button : colorButtons) {
+            button.setDisable(false);
+        }
+        checkButton.setOnAction(event -> submitCode());
+        resetButton.setOnAction(event -> resetCreate());
     }
 
     private void setUpButtons() {
@@ -159,22 +168,39 @@ public class GameBoard {
             resetButton.setOnAction(event -> resetGuess());
         }
         if ("create".equals(mode)) {
-            checkButton.setOnAction(event -> submitResponse());
+            checkButton.setOnAction(event -> onCheckButtonClick());
             blackButton.setOnAction(event -> addResponse(Color.BLACK));
             whiteButton.setOnAction(event -> addResponse(Color.WHITE));
             resetButton.setOnAction(event -> resetResponse());    
-
-           if (isGameFinished) {
-                greenButton.setOnAction(event -> addColorToCreateGrid(Code.Color.GREEN));
-                redButton.setOnAction(event -> addColorToCreateGrid(Code.Color.RED));
-                blueButton.setOnAction(event -> addColorToCreateGrid(Code.Color.BLUE));
-                yellowButton.setOnAction(event -> addColorToCreateGrid(Code.Color.YELLOW));
-                orangeButton.setOnAction(event -> addColorToCreateGrid(Code.Color.ORANGE));
-                purpleButton.setOnAction(event -> addColorToCreateGrid(Code.Color.PURPLE));
-                checkButton.setOnAction(event -> submitCode());
-                resetButton.setOnAction(event -> resetCreate());
-            }
+            greenButton.setOnAction(event -> addColorToCreateGrid(Code.Color.GREEN));
+            redButton.setOnAction(event -> addColorToCreateGrid(Code.Color.RED));
+            blueButton.setOnAction(event -> addColorToCreateGrid(Code.Color.BLUE));
+            yellowButton.setOnAction(event -> addColorToCreateGrid(Code.Color.YELLOW));
+            orangeButton.setOnAction(event -> addColorToCreateGrid(Code.Color.ORANGE));
+            purpleButton.setOnAction(event -> addColorToCreateGrid(Code.Color.PURPLE));
+            // checkButton.setOnAction(event -> submitCode());
+            // resetButton.setOnAction(event -> resetCreate());
+                
         }
+    }
+
+    private void onCheckButtonClick() {
+        if (isFirstGuess) {
+            handleInitialGuess();
+        } else {
+            submitResponse();
+        }
+    }
+    
+    private void handleInitialGuess() {
+        Code initialGuess = solver.guess();
+        displayGuess(initialGuess);
+        text.setText("Please add black and/or white pegs or press check again if no correct colors.");
+        whiteButton.setDisable(false);
+        blackButton.setDisable(false);
+        resetButton.setDisable(false);
+        isFirstGuess = false;
+        currentGuessRow++;
     }
 
     private void addColorToCreateGrid(Code.Color color) {
@@ -246,7 +272,7 @@ public class GameBoard {
                 text.setText("Congratulations! It took you " + (currentGuessRow + 1) + " guesses.");
             }
             revealCode();
-            disableButtons();
+            disableAllButtons();
             nextButton.setVisible(true);
 
             endTime = System.currentTimeMillis();
@@ -275,7 +301,7 @@ public class GameBoard {
                 text.setText("I'm sorry, you lose.");
                 revealCode();
                 nextButton.setVisible(true);
-                disableButtons();
+                disableAllButtons();
                 isGameFinished = true;
                 try {
                     Utils.deleteGameState(username);
@@ -330,7 +356,7 @@ public class GameBoard {
                                                             ? Code.Color.PURPLE.ordinal()
                                                             : -1);
         }
-        disableButtons();
+        disableAllButtons();
         Code userCode = new Code(codeList);
     }
 
@@ -358,61 +384,42 @@ public class GameBoard {
         numPegs = 0;
         tempResponseRow = currentResponseRow;
     }
-
+    private boolean isFirstGuess = true;
+    
     private void submitResponse() {
-        if (currentGuessRow == 0) {
-            Code firstGuess = solver.guess(null); 
-            displayGuess(firstGuess);
-            text.setText("Please add black and white pegs or press check again if no pegs correct colors." + '\n' +
-                "Press check again if no correct colors.");
-            whiteButton.setDisable(false);
-            blackButton.setDisable(false);
-            resetButton.setDisable(false);
-            currentGuessRow++;
-            return;
-        }
-
         numPegs = numBlack = numWhite = 0;
-
-        // get the number of black and white pegs in the two rows
         pegCounts = Utils.countResponsePegs(responseGrid, currentResponseRow);
-        System.out.println(currentResponseRow);
+        Code nextGuess = solver.guess(pegCounts);
         numBlack = pegCounts.getKey();
         numWhite = pegCounts.getValue();
-        System.out.println("Black pegs: " + numBlack);
-        System.out.println("White pegs: " + numWhite);
-
-        Code nextGuess = solver.guess(pegCounts);
-        
+    
         if (numBlack == Mastermind.CODE_LENGTH) {
-            text.setText("The computer has succesfully guessed your code!");
-            blackButton.setDisable(true);
-            whiteButton.setDisable(true);
-            checkButton.setDisable(true);
-
-            // add the user's guess to create grid
+            text.setText("The computer has successfully guessed your code!");
             for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
                 displayColors(nextGuess.getColor(i), createGrid, i, 0);
             }
-
             isGameFinished = true;
+            disableAllButtons();
+            nextButton.setVisible(true);
             return;
-
-        } else if (solver.hasReachedMaxGuesses()) {
-            text.setText("The computer couldn't guess your code within the allowed attempts.");
-            isGameFinished = true;
-            return;
-        
-        } else if (currentGuessRow < Mastermind.NUM_GUESSES) {
-            displayGuess(nextGuess);
-            currentResponseRow += 2;
-            tempResponseRow = currentResponseRow;
-            currentResponseColumn = 0;
-            currentGuessRow++;
-            text.setText("The computer has made " + currentGuessRow + " guesses. Please provide feedback.");
         }
+    
+        if (currentGuessRow == Mastermind.NUM_GUESSES) {
+            text.setText("The computer couldn't guess your code. Enter your correct code.");
+            isGameFinished = true;
+            enableButtonsForCodeReveal();
+            isGameFinished = true;
+        }
+    
+        displayGuess(nextGuess);
+        
+        currentResponseRow += 2;
+        tempResponseRow = currentResponseRow;
+        currentGuessRow++;
+        
+        text.setText("The computer has made " + currentGuessRow + " guesses. Please provide feedback.");
     }
-
+    
     // computer's guess
     private void displayGuess(Code guess) {
         for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
@@ -436,13 +443,16 @@ public class GameBoard {
         }
     }
 
-    private void disableButtons() {
+    
+    private void disableAllButtons() {
+        checkButton.setDisable(true);
+        resetButton.setDisable(true);
+        whiteButton.setDisable(true);
+        blackButton.setDisable(true);
         Button[] colorButtons = { greenButton, redButton, blueButton, yellowButton, orangeButton, purpleButton };
         for (Button button : colorButtons) {
             button.setDisable(true);
         }
-        checkButton.setDisable(true);
-        resetButton.setDisable(true);
     }
 
     @FXML
