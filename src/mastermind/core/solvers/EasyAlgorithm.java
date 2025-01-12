@@ -24,31 +24,29 @@ public class EasyAlgorithm extends MastermindAlgorithm {
         int totalPegs = response.getKey() + response.getValue();
 
         if (!shufflingPhase) {
-            // Keep the correct number of pegs from the previous guess
+            // keep the correct number of pegs from the previous guess
             List<Integer> newGuess = new ArrayList<>();
             for (Code.Color color : lastGuess.getColors().subList(0, totalPegs)) {
                 newGuess.add(color.ordinal());
             }
             
-            // If we haven't found all colors yet, move to the next color for the remaining pegs
+            // move to the next color for the remaining pegs if total pegs < 4
             if (totalPegs < Mastermind.CODE_LENGTH) {
                 currentColorIndex++;
                 if (currentColorIndex >= COLORS.length) {
                     currentColorIndex = 0;
                 }
                 
-                // Fill the remaining positions with the new color
+                // fill the remaining positions with the new color
                 while (newGuess.size() < Mastermind.CODE_LENGTH) {
                     newGuess.add(COLORS[currentColorIndex].ordinal());
                 }
             } else {
-                // If we have found all colors, start shuffling
-                shufflingPhase = true;
+                shufflingPhase = true;  // if total pegs = 4, start shuffling
             }
             
             lastGuess = new Code(newGuess);
         } else {
-            // If in shuffling phase, rotate the colors
             List<Integer> newGuess = new ArrayList<>();
             for (Code.Color color : lastGuess.getColors()) {
                 newGuess.add(color.ordinal());
@@ -56,7 +54,6 @@ public class EasyAlgorithm extends MastermindAlgorithm {
             Collections.rotate(newGuess, 1);
             lastGuess = new Code(newGuess);
         }
-
         return lastGuess;
     }
 }

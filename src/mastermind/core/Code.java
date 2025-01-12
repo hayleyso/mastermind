@@ -90,7 +90,7 @@ public class Code {
             case "easy": numColors = random.nextInt(3) + 1; break;
             case "medium": numColors = random.nextInt(2) + 3; break;
             case "hard": numColors = 4; break;
-            default: numColors = 4; 
+            default: numColors = 3; 
         }
     
         while (uniqueColors.size() < numColors) {

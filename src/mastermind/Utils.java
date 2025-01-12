@@ -6,6 +6,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -144,6 +146,67 @@ public class Utils {
         return null;
     }
     
+    public static ArrayList<Integer> digitsFromBase(int number, final int base, final int arrLength) {
+        ArrayList<Integer> digits = new ArrayList<>(arrLength);
+
+        while (number > 0) {
+            final int leastSignificantDigit = number % base;
+            digits.add(leastSignificantDigit);
+            number /= base;
+        }
+
+        while (digits.size() < arrLength) {
+            digits.add(0);
+        }
+
+        Collections.reverse(digits);
+
+        return digits;
+    }
+
+    public static List<Pair<Integer, Pair<Integer, Integer>>> verifyUserResponses(Code userCode, List<Code> computerGuesses, List<Pair<Integer, Integer>> userResponses) {
+        List<Pair<Integer, Pair<Integer, Integer>>> mistakes = new ArrayList<>();
+        
+        for (int i = 0; i < computerGuesses.size(); i++) {
+            Code computerGuess = computerGuesses.get(i);
+            Pair<Integer, Integer> correctResponse = calculateResponse(userCode, computerGuess);
+            Pair<Integer, Integer> userResponse = userResponses.get(i);
+            
+            if (!correctResponse.equals(userResponse)) {
+                mistakes.add(new Pair<>(i + 1, correctResponse));
+            }
+        }
+        
+        return mistakes;
+    }
     
+    public static Pair<Integer, Integer> calculateResponse(Code code, Code guess) {
+        int blackPegs = 0;
+        int whitePegs = 0;
+        boolean[] usedInCode = new boolean[Mastermind.CODE_LENGTH];
+        boolean[] usedInGuess = new boolean[Mastermind.CODE_LENGTH];
+
+        for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
+            if (code.getColor(i) == guess.getColor(i)) {
+                blackPegs++;
+                usedInCode[i] = true;
+                usedInGuess[i] = true;
+            }
+        }
+
+        for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
+            if (!usedInGuess[i]) {
+                for (int j = 0; j < Mastermind.CODE_LENGTH; j++) {
+                    if (!usedInCode[j] && code.getColor(j) == guess.getColor(i)) {
+                        whitePegs++;
+                        usedInCode[j] = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return new Pair<>(blackPegs, whitePegs);
+    }
 
 }

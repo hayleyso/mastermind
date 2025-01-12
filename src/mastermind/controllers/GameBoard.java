@@ -16,6 +16,8 @@ import mastermind.core.Response;
 import mastermind.core.solvers.DonaldKnuthAlgorithm;
 import mastermind.core.solvers.EasyAlgorithm;
 import mastermind.core.solvers.MastermindAlgorithm;
+import mastermind.core.solvers.MediumAlgorithm;
+
 import java.io.IOException;
 import java.util.*;
 
@@ -45,6 +47,8 @@ public class GameBoard {
     private Pair<Integer, Integer> pegCounts;
     private List<String> guesses = new ArrayList<>();
     private List<String> responses = new ArrayList<>();
+    private List<Code> computerGuesses = new ArrayList<>();
+    private List<Pair<Integer, Integer>> userResponses = new ArrayList<>();
 
     private Code generatedCode;
     private State state = State.getInstance();
@@ -95,13 +99,13 @@ public class GameBoard {
             text.setText("Press check to start the game.");
             createLevel = state.getCreateDifficultyLevel();
 
-            solver = switch (createLevel.toLowerCase()) {
+            solver = switch (createLevel) {
                 case "easy" -> new EasyAlgorithm();
-                // case "medium" -> new MediumAlgorithm();
-                case "hard" -> new DonaldKnuthAlgorithm();
-                default -> new EasyAlgorithm();
+                case "medium" -> new MediumAlgorithm();
+                case "hard" -> new DonaldKnuthAlgorithm(createLevel);
+                default -> throw new IllegalStateException(createLevel);
             };
-
+            
             blackButton.setDisable(true);
             whiteButton.setDisable(true);
             resetButton.setDisable(true);
@@ -178,9 +182,6 @@ public class GameBoard {
             yellowButton.setOnAction(event -> addColorToCreateGrid(Code.Color.YELLOW));
             orangeButton.setOnAction(event -> addColorToCreateGrid(Code.Color.ORANGE));
             purpleButton.setOnAction(event -> addColorToCreateGrid(Code.Color.PURPLE));
-            // checkButton.setOnAction(event -> submitCode());
-            // resetButton.setOnAction(event -> resetCreate());
-                
         }
     }
 
@@ -358,6 +359,25 @@ public class GameBoard {
         }
         disableAllButtons();
         Code userCode = new Code(codeList);
+
+        List<Pair<Integer, Pair<Integer, Integer>>> mistakes = Utils.verifyUserResponses(userCode, computerGuesses, userResponses);
+    
+        if (mistakes.isEmpty()) {
+            text.setText("All your responses were correct! The computer couldn't guess your code.");
+        } else {
+            StringBuilder errorMessage = new StringBuilder("Incorrect responses were entered.\n");
+            for (Pair<Integer, Pair<Integer, Integer>> mistake : mistakes) {
+                int row = mistake.getKey();
+                int black = mistake.getValue().getKey();
+                int white = mistake.getValue().getValue();
+                errorMessage.append(String.format("Row %d: Correct response should be %d black, %d white\n.", row, black, white));
+            }
+            text.setText(errorMessage.toString());
+        }
+        
+        disableAllButtons();
+        nextButton.setVisible(true);
+
     }
 
     private void addResponse(Color color) {
@@ -390,11 +410,9 @@ public class GameBoard {
         numPegs = numBlack = numWhite = 0;
         pegCounts = Utils.countResponsePegs(responseGrid, currentResponseRow);
         Code nextGuess = solver.guess(pegCounts);
-        numBlack = pegCounts.getKey();
-        numWhite = pegCounts.getValue();
     
-        if (numBlack == Mastermind.CODE_LENGTH) {
-            text.setText("The computer has successfully guessed your code!");
+        if (pegCounts.getKey() == Mastermind.CODE_LENGTH) {
+            text.setText("The computer successfully guessed your code!");
             for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
                 displayColors(nextGuess.getColor(i), createGrid, i, 0);
             }
@@ -408,16 +426,20 @@ public class GameBoard {
             text.setText("The computer couldn't guess your code. Enter your correct code.");
             isGameFinished = true;
             enableButtonsForCodeReveal();
-            isGameFinished = true;
+            return;
         }
     
-        displayGuess(nextGuess);
-        
+        if (currentGuessRow < Mastermind.NUM_GUESSES) {
+            displayGuess(nextGuess);
+        }        
         currentResponseRow += 2;
         tempResponseRow = currentResponseRow;
         currentGuessRow++;
         
-        text.setText("The computer has made " + currentGuessRow + " guesses. Please provide feedback.");
+        text.setText("The computer has made " + currentGuessRow + " guesses. Please provide feedback, when done press check.");
+
+        computerGuesses.add(nextGuess);
+        userResponses.add(pegCounts);
     }
     
     // computer's guess
