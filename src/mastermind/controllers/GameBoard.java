@@ -44,8 +44,6 @@ public class GameBoard {
     @FXML 
     private Button nextButton;
     @FXML 
-    private Button questionButton;
-    @FXML 
     private GridPane guessGrid;
     @FXML 
     private GridPane createGrid;
@@ -170,7 +168,6 @@ public class GameBoard {
         checkButton.setShape(new Circle(20));
         checkButton.setMinSize(44, 44);
         checkButton.setMaxSize(44, 44);
-        questionButton.setShape(new Circle(10));
         nextButton.setVisible(false);
     }
 
@@ -218,6 +215,7 @@ public class GameBoard {
         resetButton.setDisable(false);
         isFirstGuess = false;
         computerGuesses.add(initialGuess);
+        guesses.add(initialGuess.toString());
         currentGuessRow++;
     }
 
@@ -301,17 +299,17 @@ public class GameBoard {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Utils.updateGuessLeaderBoard(username, currentGuessRow + 1, timeTaken);
+            Utils.updateLeaderBoard(username, createLevel, mode, currentCreateColumn, timeTaken);
 
         } else {
             currentGuessRow++;
 
             if (resp.getResponse().getKey() == 0 && resp.getResponse().getValue() == 0) {
-                text.setText("None correct. " + (Mastermind.NUM_GUESSES - currentGuessRow) + " attempt" +
+                text.setText("None correct. " + (Mastermind.NUM_GUESSES - currentGuessRow) + "You have attempt" +
                         ((Mastermind.NUM_GUESSES - currentGuessRow) != 1 ? "s" : "") + " left.");
             } else {
                 int attemptsLeft = Mastermind.NUM_GUESSES - currentGuessRow;
-                text.setText(attemptsLeft + " attempt" + (attemptsLeft != 1 ? "s" : "") + " left.");
+                text.setText(attemptsLeft + "You have attempt" + (attemptsLeft != 1 ? "s" : "") + " left.");
             }
 
             if (currentGuessRow >= Mastermind.NUM_GUESSES) {
@@ -385,8 +383,8 @@ public class GameBoard {
     private void validateResponses(Code userCode) {
         List<Integer> mistakeRows = new ArrayList<>();
         
-        for (int i = 0; i < computerGuesses.size() && i < userResponses.size(); i++) {
-            Code computerGuess = computerGuesses.get(i);
+        for (int i = 1; i < computerGuesses.size() && i < userResponses.size(); i++) {
+            Code computerGuess = computerGuesses.get(i-1);
             Response correctResponse = new Response(userCode, computerGuess);
             Pair<Integer, Integer> userResponse = userResponses.get(i);
             
@@ -449,18 +447,32 @@ public class GameBoard {
             isGameFinished = true;
             disableAllButtons();
             validateResponses(nextGuess);
+            try {
+                Utils.deleteGameState(username);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
             return;
         }
     
         if (currentGuessRow == Mastermind.NUM_GUESSES) {
             text.setText("The computer couldn't guess your code. Enter your correct code.");
             isGameFinished = true;
+            try {
+                Utils.deleteGameState(username);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
             enableButtonsForCodeReveal();
             return;
         }
 
         computerGuesses.add(nextGuess);
         userResponses.add(pegCounts);
+        guesses.add(nextGuess.toString());
+        responses.add(pegCounts.getKey() + "B" + pegCounts.getValue() + "W");
 
         if (currentGuessRow < Mastermind.NUM_GUESSES) {
             displayGuess(nextGuess);
@@ -471,6 +483,13 @@ public class GameBoard {
         currentGuessRow++;
         
         text.setText("The computer has made " + currentGuessRow + " guesses. Please provide feedback, when done press check.");
+
+        try {
+            Utils.saveGameState(username, currentGuessRow, guesses, responses);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
     }
 
@@ -513,13 +532,6 @@ public class GameBoard {
     @FXML
     void onNextBtnClick(ActionEvent event) throws IOException {
         Utils.loadScene(event, "/mastermind/gui/fxml/GameOver.fxml");
-    }
-
-    @FXML
-    void onQuestionBtnClick(ActionEvent event) throws IOException {
-        // TODO add help window popup
-        // add one for guess
-        // one for create
     }
 
     // public void loadGameState() throws IOException {

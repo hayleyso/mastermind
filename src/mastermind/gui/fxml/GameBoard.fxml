@@ -112,15 +112,6 @@
             <Font name="SansSerif Regular" size="12.0" />
          </font>
       </Button>
-      <Button fx:id="questionButton" layoutX="572.0" layoutY="65.0" mnemonicParsing="false" onAction="#onQuestionBtnClick" prefHeight="18.0" prefWidth="8.0">
-         <graphic>
-            <ImageView fitHeight="14.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../img/icons/question.png" />
-               </image>
-            </ImageView>
-         </graphic>
-      </Button>
       <GridPane fx:id="responseButtons" layoutX="290.0" layoutY="445.0" prefHeight="59.0" prefWidth="43.0">
         <columnConstraints>
           <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />

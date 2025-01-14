@@ -20,7 +20,6 @@ public class EnterUsername {
     private TextField usernameField;
     @FXML
     private Button submit;
-    
     private String username;
 
     @FXML
@@ -61,7 +60,6 @@ public class EnterUsername {
         popupStage.setTitle("Mastermind");
         popupStage.getIcons().add(new Image(getClass().getResourceAsStream(Mastermind.ICON_PATH)));
         popupStage.setResizable(false);
-
         popupStage.showAndWait();
     }
 

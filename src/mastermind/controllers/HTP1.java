@@ -5,7 +5,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import mastermind.Utils;
 
-
 public class HTP1 {
 
     @FXML

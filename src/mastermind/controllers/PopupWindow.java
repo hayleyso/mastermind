@@ -3,6 +3,9 @@ package mastermind.controllers;
 import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -11,8 +14,7 @@ import mastermind.core.State;
 
 public class PopupWindow {
     @FXML
-    private Button button;
-
+    private Button newGameButton;
     @FXML
     private Button returnButton;
 
@@ -26,17 +28,20 @@ public class PopupWindow {
 
     @FXML
     void onNewGameBtnClick(ActionEvent event) throws IOException {
-        Stage stage = (Stage) button.getScene().getWindow();
+        Stage stage = (Stage) newGameButton.getScene().getWindow();
         stage.close();
-        Utils.deleteGameState(State.getInstance().getUsername());
+    
         Utils.loadScene(event, "/mastermind/gui/fxml/SelectGameMode.fxml");
+      
+
+        Utils.deleteGameState(State.getInstance().getUsername());
     }
 
     @FXML
     void onReturnBtnClick(ActionEvent event) {
         State.getInstance().setGameFinished(false);
-        Stage stage = (Stage) button.getScene().getWindow();
-        stage.close();        
+        Stage stage = (Stage) returnButton.getScene().getWindow();
+        stage.close();
     }
-    
+
 }

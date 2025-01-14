@@ -15,10 +15,10 @@ public class Mastermind extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("gui/fxml/SelectGameMode.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("gui/fxml/StartMenu.fxml"));
         Scene scene = new Scene(root);
 
-        primaryStage.setTitle("Mastermind - Online Edition");
+        primaryStage.setTitle("Mastermind");
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream(ICON_PATH)));
         primaryStage.setScene(scene);
         primaryStage.show();

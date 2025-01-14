@@ -4,11 +4,14 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Scanner;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -23,15 +26,14 @@ import mastermind.core.Code;
 
 public class Utils {
     public static final String DIRECTORY_PATH = "src/mastermind/data/users/";
-    private static final String CREATE_LEADERBOARD_FILE = "src/mastermind/data/create leaderboard.txt";
-    private static final String GUESS_LEADERBOARD_FILE = "src/mastermind/data/guess leaderboard.txt";
+    private static final String GUESS_LEADERBOARD_FILE = "src/mastermind/data/leaderboard.txt";
 
     public static <T> T loadScene(ActionEvent event, String fxmlPath) throws IOException {
         FXMLLoader loader = new FXMLLoader(Utils.class.getResource(fxmlPath));
         Parent parent = loader.load();
         Scene scene = new Scene(parent);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-     
+
         window.setScene(scene);
         window.show();
 
@@ -57,14 +59,81 @@ public class Utils {
         }
     }
 
-    public static void updateGuessLeaderBoard(String username, int attempts, long timeTaken) {
-        File file = new File(GUESS_LEADERBOARD_FILE);
-        file.setWritable(true);
-    }
+    public static void updateLeaderBoard(String username, String level, String mode, int attempts, long timeInMillis) {
+        try (Scanner scanner = new Scanner(new File(GUESS_LEADERBOARD_FILE))) {
+            List<String[]> entries = new ArrayList<>();
 
-    public static void udpateCreateLeaderBoard(String username, int attempts, long timeTaken) {
-        File file = new File(CREATE_LEADERBOARD_FILE + username + ".txt");
-        file.setWritable(true);
+            // Skip header if exists
+            if (scanner.hasNextLine()) {
+                String header = scanner.nextLine();
+                if (!header.startsWith("Rank")) {
+                    scanner.reset();
+                }
+            }
+
+            // Read existing entries
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if (line.trim().isEmpty())
+                    continue;
+                String[] parts = line.split("\\|");
+                // Remove rank from parts since we'll recalculate it
+                entries.add(new String[] {
+                        parts[1].trim(), // username
+                        parts[2].trim(), // level
+                        parts[3].trim(), // mode
+                        parts[4].trim(), // attempts
+                        parts[5].trim() // time
+                });
+            }
+
+            // Add new entry
+            entries.add(new String[] {
+                    username,
+                    level,
+                    mode,
+                    String.valueOf(attempts),
+                    String.format("%d:%02d", timeInMillis / 60000, (timeInMillis % 60000) / 1000)
+            });
+
+            // Sort entries
+            Collections.sort(entries, (a, b) -> {
+                // Sort by level (Hard > Medium > Easy)
+                int levelCompare = b[1].compareTo(a[1]);
+                if (levelCompare != 0)
+                    return levelCompare;
+
+                // Sort by attempts
+                int attemptCompare = Integer.compare(
+                        Integer.parseInt(a[3]),
+                        Integer.parseInt(b[3]));
+                if (attemptCompare != 0)
+                    return attemptCompare;
+
+                // Sort by time
+                return a[4].compareTo(b[4]);
+            });
+
+            // Write header and entries
+            try (PrintWriter writer = new PrintWriter(new FileWriter("leaderboard.txt"))) {
+                writer.println(
+                        "Rank            |          Username          |            Level          |            Mode          |                # of attempts           |              Time taken");
+                writer.println("-".repeat(120));
+
+                for (int i = 0; i < entries.size(); i++) {
+                    String[] entry = entries.get(i);
+                    writer.printf("%-15d | %-25s | %-23s | %-23s | %-35s | %-20s%n",
+                            i + 1,
+                            entry[0],
+                            entry[1],
+                            entry[2],
+                            entry[3],
+                            entry[4]);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static boolean hasUnfinishedGame(String username) throws IOException {
@@ -112,12 +181,12 @@ public class Utils {
         long seconds = (timeTaken % 60000) / 1000;
         return String.format("%d:%02d", minutes, seconds);
     }
-    
+
     public static Pair<Integer, Integer> countResponsePegs(GridPane responseGrid, int currentResponseRow) {
         int numBlack = 0;
         int numWhite = 0;
         int startRow = currentResponseRow;
-        
+
         for (int col = 0; col < 2; col++) {
             for (int row = startRow; row <= startRow + 1; row++) {
                 Node node = getNodeFromGridPane(responseGrid, col, row);
@@ -131,10 +200,10 @@ public class Utils {
                 }
             }
         }
-        
+
         return new Pair<>(numBlack, numWhite);
     }
-    
+
     private static Node getNodeFromGridPane(GridPane gridPane, int col, int row) {
         for (Node node : gridPane.getChildren()) {
             if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
@@ -143,7 +212,7 @@ public class Utils {
         }
         return null;
     }
-    
+
     public static ArrayList<Integer> digitsFromBase(int number, int base, int arrLength) {
         ArrayList<Integer> digits = new ArrayList<>(arrLength);
 
@@ -162,22 +231,23 @@ public class Utils {
         return digits;
     }
 
-    public static List<Integer> verifyUserResponses(Code userCode, List<Code> computerGuesses, List<Pair<Integer, Integer>> userResponses) {
+    public static List<Integer> verifyUserResponses(Code userCode, List<Code> computerGuesses,
+            List<Pair<Integer, Integer>> userResponses) {
         List<Integer> mistakeRows = new ArrayList<>();
-        
+
         for (int i = 0; i < computerGuesses.size(); i++) {
             Code computerGuess = computerGuesses.get(i);
             Pair<Integer, Integer> correctResponse = calculateResponse(userCode, computerGuess);
             Pair<Integer, Integer> userResponse = userResponses.get(i);
-            
+
             if (!correctResponse.equals(userResponse)) {
-                mistakeRows.add(i+1);
+                mistakeRows.add(i + 1);
             }
         }
-        
+
         return mistakeRows;
     }
-    
+
     public static Pair<Integer, Integer> calculateResponse(Code code, Code guess) {
         int blackPegs = 0;
         int whitePegs = 0;
