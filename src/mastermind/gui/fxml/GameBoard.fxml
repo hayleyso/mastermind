@@ -72,7 +72,7 @@
       </GridPane>
       <ImageView fitHeight="429.0" fitWidth="43.0" layoutX="513.0" layoutY="65.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../../../../../../../Pictures/Screenshots/Screenshot%202025-01-10%20115503.png" />
+            <Image url="@../img/background/grid.png" />
          </image>
       </ImageView>
       <GridPane fx:id="responseGrid" layoutX="521.0" layoutY="64.0" prefHeight="429.0" prefWidth="40.0">
@@ -103,7 +103,7 @@
           <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
       </GridPane>
-      <Text id="text" fx:id="text" layoutX="252.0" layoutY="565.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="343.6366882324219">
+      <Text id="text" fx:id="text" layoutX="245.0" layoutY="565.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="355.0">
          <font>
             <Font name="SansSerif Regular" size="14.0" />
          </font></Text>

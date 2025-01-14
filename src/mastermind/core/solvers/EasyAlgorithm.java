@@ -9,6 +9,7 @@ import java.util.List;
 
 public class EasyAlgorithm extends MastermindAlgorithm {
     private static final Code.Color[] COLORS = Code.Color.values();
+    private List<Integer> correctColors = new ArrayList<>();
     private int currentColorIndex = 0;
     private Code lastGuess;
     private boolean shufflingPhase = false;
@@ -24,36 +25,44 @@ public class EasyAlgorithm extends MastermindAlgorithm {
         int totalPegs = response.getKey() + response.getValue();
 
         if (!shufflingPhase) {
-            // keep the correct number of pegs from the previous guess
             List<Integer> newGuess = new ArrayList<>();
             for (Code.Color color : lastGuess.getColors().subList(0, totalPegs)) {
                 newGuess.add(color.ordinal());
+                if (!correctColors.contains(color.ordinal())) {
+                    correctColors.add(color.ordinal());
+                }
             }
-            
-            // move to the next color for the remaining pegs if total pegs < 4
+
             if (totalPegs < Mastermind.CODE_LENGTH) {
                 currentColorIndex++;
                 if (currentColorIndex >= COLORS.length) {
                     currentColorIndex = 0;
                 }
-                
-                // fill the remaining positions with the new color
+
                 while (newGuess.size() < Mastermind.CODE_LENGTH) {
                     newGuess.add(COLORS[currentColorIndex].ordinal());
                 }
+                lastGuess = new Code(newGuess);
             } else {
-                shufflingPhase = true;  // if total pegs = 4, start shuffling
+                shufflingPhase = true;
+                while (correctColors.size() < Mastermind.CODE_LENGTH) {
+                    correctColors.add(lastGuess.getColors().get(correctColors.size()).ordinal());
+                }
+                List<Integer> shuffledGuess = new ArrayList<>(correctColors);
+                Collections.shuffle(shuffledGuess);
+                lastGuess = new Code(shuffledGuess);
             }
-            
-            lastGuess = new Code(newGuess);
         } else {
-            List<Integer> newGuess = new ArrayList<>();
-            for (Code.Color color : lastGuess.getColors()) {
-                newGuess.add(color.ordinal());
-            }
-            Collections.rotate(newGuess, 1);
-            lastGuess = new Code(newGuess);
+            List<Integer> shuffledGuess = new ArrayList<>(correctColors);
+            do {
+                Collections.shuffle(shuffledGuess);
+            } while (shuffledGuess.equals(lastGuess.getColors().stream()
+                    .map(Code.Color::ordinal)
+                    .toList()));
+            lastGuess = new Code(shuffledGuess);
         }
+
         return lastGuess;
     }
+
 }

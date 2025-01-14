@@ -17,28 +17,44 @@ import mastermind.core.solvers.DonaldKnuthAlgorithm;
 import mastermind.core.solvers.EasyAlgorithm;
 import mastermind.core.solvers.MastermindAlgorithm;
 import mastermind.core.solvers.MediumAlgorithm;
-
 import java.io.IOException;
 import java.util.*;
 
 public class GameBoard {
-    @FXML protected Button greenButton;
-    @FXML protected Button redButton;
-    @FXML protected Button blueButton;
-    @FXML protected Button yellowButton;
-    @FXML protected Button orangeButton;
-    @FXML protected Button purpleButton;
-    @FXML protected Button checkButton;
-    @FXML protected Button resetButton;
-    @FXML protected Button blackButton;
-    @FXML protected Button whiteButton;
-    @FXML protected Button nextButton;
-    @FXML protected Button questionButton;
-    @FXML protected GridPane guessGrid;
-    @FXML protected GridPane createGrid;
-    @FXML protected GridPane responseGrid;
-    @FXML protected GridPane responseButtons;
-    @FXML protected Text text;
+    @FXML
+    private Button greenButton;
+    @FXML
+    private Button redButton;
+    @FXML
+    private Button blueButton;
+    @FXML
+    private Button yellowButton;
+    @FXML 
+    private Button orangeButton;
+    @FXML
+    private Button purpleButton;
+    @FXML
+    private Button checkButton;
+    @FXML 
+    private Button resetButton;
+    @FXML 
+    private Button blackButton;
+    @FXML 
+    private Button whiteButton;
+    @FXML 
+    private Button nextButton;
+    @FXML 
+    private Button questionButton;
+    @FXML 
+    private GridPane guessGrid;
+    @FXML 
+    private GridPane createGrid;
+    @FXML 
+    private GridPane responseGrid;
+    @FXML 
+    private GridPane responseButtons;
+    @FXML
+    private Text text;
 
     private String username;
     private String mode;
@@ -51,6 +67,7 @@ public class GameBoard {
     private List<Pair<Integer, Integer>> userResponses = new ArrayList<>();
 
     private Code generatedCode;
+    private Code initialGuess;
     private State state = State.getInstance();
     private MastermindAlgorithm solver;
 
@@ -61,13 +78,11 @@ public class GameBoard {
     private int tempResponseRow;
 
     private int numPegs;
-    private int numBlack;
-    private int numWhite;
-
     private long startTime;
     private long endTime;
     private boolean isGameFinished;
-
+    private boolean isFirstGuess = true;
+    
     public GameBoard() {
         this.guesses = new ArrayList<>();
         this.responses = new ArrayList<>();
@@ -113,13 +128,12 @@ public class GameBoard {
             for (Button button : colorButtons) {
                 button.setDisable(true);
             }
+
+            initialGuess = solver.guess();
             Utils.saveToFile(username, mode, createLevel);
-
-
         }
 
         startTime = System.currentTimeMillis();
-
         setUpButtons();
         handleButtonActions();
     }
@@ -194,13 +208,16 @@ public class GameBoard {
     }
     
     private void handleInitialGuess() {
-        Code initialGuess = solver.guess();
         displayGuess(initialGuess);
-        text.setText("Please add black and/or white pegs or press check again if no correct colors.");
+        text.setText("Please add black and/or white pegs or press check again if no correct colors. ");
+        if ("hard".equals(createLevel)) {
+            text.setText("Please wait 3 seconds after your first response for the computer's guess.");
+        }
         whiteButton.setDisable(false);
         blackButton.setDisable(false);
         resetButton.setDisable(false);
         isFirstGuess = false;
+        computerGuesses.add(initialGuess);
         currentGuessRow++;
     }
 
@@ -225,8 +242,7 @@ public class GameBoard {
     }
 
     private void resetGuess() {
-        guessGrid.getChildren()
-                .removeIf(node -> GridPane.getRowIndex(node) != null && GridPane.getRowIndex(node) == currentGuessRow);
+        guessGrid.getChildren().removeIf(node -> GridPane.getRowIndex(node) != null && GridPane.getRowIndex(node) == currentGuessRow);
         currentGuessColumn = 0;
     }
 
@@ -359,27 +375,41 @@ public class GameBoard {
         }
         disableAllButtons();
         Code userCode = new Code(codeList);
-
-        List<Pair<Integer, Pair<Integer, Integer>>> mistakes = Utils.verifyUserResponses(userCode, computerGuesses, userResponses);
-    
-        if (mistakes.isEmpty()) {
-            text.setText("All your responses were correct! The computer couldn't guess your code.");
-        } else {
-            StringBuilder errorMessage = new StringBuilder("Incorrect responses were entered.\n");
-            for (Pair<Integer, Pair<Integer, Integer>> mistake : mistakes) {
-                int row = mistake.getKey();
-                int black = mistake.getValue().getKey();
-                int white = mistake.getValue().getValue();
-                errorMessage.append(String.format("Row %d: Correct response should be %d black, %d white\n.", row, black, white));
-            }
-            text.setText(errorMessage.toString());
-        }
-        
+        validateResponses(userCode);        
         disableAllButtons();
         nextButton.setVisible(true);
 
+        validateResponses(userCode);
     }
 
+    private void validateResponses(Code userCode) {
+        List<Integer> mistakeRows = new ArrayList<>();
+        
+        for (int i = 0; i < computerGuesses.size() && i < userResponses.size(); i++) {
+            Code computerGuess = computerGuesses.get(i);
+            Response correctResponse = new Response(userCode, computerGuess);
+            Pair<Integer, Integer> userResponse = userResponses.get(i);
+            
+            int correctBlacks = correctResponse.getResponse().getKey();
+            int correctWhites = correctResponse.getResponse().getValue();
+            int userBlacks = userResponse.getKey();
+            int userWhites = userResponse.getValue();
+            
+            if (correctBlacks != userBlacks || correctWhites != userWhites) {
+                mistakeRows.add(i + 1);
+                System.out.println("Row " + (i+1) + ": Expected B" + correctBlacks + "W" + correctWhites + " but got B" + userBlacks + "W" + userWhites + " instead.");
+            }
+        }
+    
+        if (mistakeRows.isEmpty()) {
+            text.setText("All your responses were correct!");
+        } else {
+            text.setText("Incorrect responses were entered. Please see the terminal for more details.");
+        }
+
+        nextButton.setVisible(true);
+    }    
+    
     private void addResponse(Color color) {
         if (numPegs < Mastermind.CODE_LENGTH) {
             int column = numPegs % 2;
@@ -404,10 +434,10 @@ public class GameBoard {
         numPegs = 0;
         tempResponseRow = currentResponseRow;
     }
-    private boolean isFirstGuess = true;
-    
+
+
     private void submitResponse() {
-        numPegs = numBlack = numWhite = 0;
+        numPegs = 0;
         pegCounts = Utils.countResponsePegs(responseGrid, currentResponseRow);
         Code nextGuess = solver.guess(pegCounts);
     
@@ -418,7 +448,7 @@ public class GameBoard {
             }
             isGameFinished = true;
             disableAllButtons();
-            nextButton.setVisible(true);
+            validateResponses(nextGuess);
             return;
         }
     
@@ -428,19 +458,22 @@ public class GameBoard {
             enableButtonsForCodeReveal();
             return;
         }
-    
+
+        computerGuesses.add(nextGuess);
+        userResponses.add(pegCounts);
+
         if (currentGuessRow < Mastermind.NUM_GUESSES) {
             displayGuess(nextGuess);
         }        
+
         currentResponseRow += 2;
         tempResponseRow = currentResponseRow;
         currentGuessRow++;
         
         text.setText("The computer has made " + currentGuessRow + " guesses. Please provide feedback, when done press check.");
 
-        computerGuesses.add(nextGuess);
-        userResponses.add(pegCounts);
     }
+
     
     // computer's guess
     private void displayGuess(Code guess) {

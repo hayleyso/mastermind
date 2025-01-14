@@ -8,21 +8,25 @@ import javafx.util.Pair;
 import mastermind.Mastermind;
 import mastermind.Utils;
 import mastermind.core.Code;
+import mastermind.core.Response;
 
 public class DonaldKnuthAlgorithm extends MastermindAlgorithm {
     private Code previousGuess = null;
     private HashSet<Code> permutations;
+    private HashSet<Code> originalPermutations;
+    private boolean isRetry = false;
     String level;
 
     public DonaldKnuthAlgorithm(String level) {
-        generatePermutations();
+        generateAllPossibleCodes();
+        originalPermutations = new HashSet<>(permutations);
     }
 
-    private void generatePermutations() {
+    private void generateAllPossibleCodes() {
         final int possibilities = (int) Math.pow(Mastermind.NUM_COLORS, Mastermind.CODE_LENGTH);
         permutations = new HashSet<>(possibilities);
 
-        for (int i = 0; i < possibilities; ++i) {
+        for (int i = 0; i < possibilities; i++) {
             final ArrayList<Integer> codeInDigits = Utils.digitsFromBase(i, Mastermind.NUM_COLORS,
                 Mastermind.CODE_LENGTH);
             final Code code = new Code(codeInDigits);
@@ -44,24 +48,50 @@ public class DonaldKnuthAlgorithm extends MastermindAlgorithm {
 
         if (blackPegs == Mastermind.CODE_LENGTH) {
             return previousGuess;
-        } else {
-            reducePermutations(response);
-            final Code nextGuess = findNextGuess();
-            previousGuess = nextGuess;
-            return nextGuess;
         }
+
+        if (!isRetry) {
+            reducePermutations(response);
+        }
+
+        // If permutations become empty due to wrong input, reset and retry
+        if (permutations.isEmpty()) {
+            permutations = new HashSet<>(originalPermutations);
+            isRetry = true;
+            return previousGuess;
+        }
+
+        isRetry = false;
+        final Code nextGuess = findNextGuess();
+        
+        // If no valid guess found, retry previous guess
+        if (nextGuess == null) {
+            isRetry = true;
+            return previousGuess;
+        }
+        
+        previousGuess = nextGuess;
+        return nextGuess;
     }
 
     private void reducePermutations(Pair<Integer, Integer> response) {
-        this.permutations.removeIf(permutation -> {
+        HashSet<Code> newPermutations = new HashSet<>();
+        
+        for (Code permutation : this.permutations) {
             Pair<Integer, Integer> testResponse = evaluateGuess(permutation, this.previousGuess);
-            return !testResponse.equals(response);
-        });
+            if (testResponse.equals(response)) {
+                newPermutations.add(permutation);
+            }
+        }
+        
+        if (!newPermutations.isEmpty()) {
+            this.permutations = newPermutations;
+        }
     }
 
     private Code findNextGuess() {
-        TreeMap<Integer, Code> guessScores = new TreeMap<>();
-
+        TreeMap<Integer, ArrayList<Code>> guessScores = new TreeMap<>();
+        
         for (final Code guess : this.permutations) {
             int maxGroupSize = 0;
             for (final Code assumedCode : this.permutations) {
@@ -71,38 +101,20 @@ public class DonaldKnuthAlgorithm extends MastermindAlgorithm {
                     .count();
                 maxGroupSize = Math.max(maxGroupSize, groupSize);
             }
-            guessScores.put(maxGroupSize, guess);
+            
+            guessScores.computeIfAbsent(maxGroupSize, k -> new ArrayList<>()).add(guess);
         }
-
-        return guessScores.firstEntry().getValue();
+        
+        if (guessScores.isEmpty()) {
+            return null;
+        }
+        
+        ArrayList<Code> bestGuesses = guessScores.firstEntry().getValue();
+        return bestGuesses.get(0);
     }
 
     private Pair<Integer, Integer> evaluateGuess(Code code, Code guess) {
-        int blackPegs = 0;
-        int whitePegs = 0;
-        boolean[] usedInCode = new boolean[Mastermind.CODE_LENGTH];
-        boolean[] usedInGuess = new boolean[Mastermind.CODE_LENGTH];
-
-        for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
-            if (code.getColor(i) == guess.getColor(i)) {
-                blackPegs++;
-                usedInCode[i] = true;
-                usedInGuess[i] = true;
-            }
-        }
-
-        for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
-            if (!usedInGuess[i]) {
-                for (int j = 0; j < Mastermind.CODE_LENGTH; j++) {
-                    if (!usedInCode[j] && code.getColor(j) == guess.getColor(i)) {
-                        whitePegs++;
-                        usedInCode[j] = true;
-                        break;
-                    }
-                }
-            }
-        }
-
-        return new Pair<>(blackPegs, whitePegs);
+        Response response = new Response(code, guess);
+        return response.getResponse();
     }
 }

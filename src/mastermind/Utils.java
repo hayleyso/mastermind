@@ -95,8 +95,7 @@ public class Utils {
         writer.close();
     }
 
-    public static void saveGameState(String username, int row, List<String> guesses, List<String> responses)
-            throws IOException {
+    public static void saveGameState(String username, int row, List<String> guesses, List<String> responses) throws IOException {
         File file = new File(DIRECTORY_PATH + username + ".txt");
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
             writer.write(guesses.get(row) + "|" + responses.get(row) + "\n");
@@ -113,7 +112,6 @@ public class Utils {
         long seconds = (timeTaken % 60000) / 1000;
         return String.format("%d:%02d", minutes, seconds);
     }
-
     
     public static Pair<Integer, Integer> countResponsePegs(GridPane responseGrid, int currentResponseRow) {
         int numBlack = 0;
@@ -146,11 +144,11 @@ public class Utils {
         return null;
     }
     
-    public static ArrayList<Integer> digitsFromBase(int number, final int base, final int arrLength) {
+    public static ArrayList<Integer> digitsFromBase(int number, int base, int arrLength) {
         ArrayList<Integer> digits = new ArrayList<>(arrLength);
 
         while (number > 0) {
-            final int leastSignificantDigit = number % base;
+            int leastSignificantDigit = number % base;
             digits.add(leastSignificantDigit);
             number /= base;
         }
@@ -164,8 +162,8 @@ public class Utils {
         return digits;
     }
 
-    public static List<Pair<Integer, Pair<Integer, Integer>>> verifyUserResponses(Code userCode, List<Code> computerGuesses, List<Pair<Integer, Integer>> userResponses) {
-        List<Pair<Integer, Pair<Integer, Integer>>> mistakes = new ArrayList<>();
+    public static List<Integer> verifyUserResponses(Code userCode, List<Code> computerGuesses, List<Pair<Integer, Integer>> userResponses) {
+        List<Integer> mistakeRows = new ArrayList<>();
         
         for (int i = 0; i < computerGuesses.size(); i++) {
             Code computerGuess = computerGuesses.get(i);
@@ -173,11 +171,11 @@ public class Utils {
             Pair<Integer, Integer> userResponse = userResponses.get(i);
             
             if (!correctResponse.equals(userResponse)) {
-                mistakes.add(new Pair<>(i + 1, correctResponse));
+                mistakeRows.add(i+1);
             }
         }
         
-        return mistakes;
+        return mistakeRows;
     }
     
     public static Pair<Integer, Integer> calculateResponse(Code code, Code guess) {

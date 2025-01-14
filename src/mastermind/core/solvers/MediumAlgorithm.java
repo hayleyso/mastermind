@@ -3,6 +3,7 @@ package mastermind.core.solvers;
 import javafx.util.Pair;
 import mastermind.Mastermind;
 import mastermind.core.Code;
+import mastermind.core.Response;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -35,7 +36,7 @@ public class MediumAlgorithm extends MastermindAlgorithm {
 
     @Override
     public Code guess() {
-        lastGuess = new Code(Arrays.asList(0, 0, 1, 1)); // start with 0011 as per Knuth's algorithm
+        lastGuess = new Code(Arrays.asList(0, 0, 2, 2)); 
         return lastGuess;
     }
 
@@ -59,33 +60,8 @@ public class MediumAlgorithm extends MastermindAlgorithm {
     }
 
     private Pair<Integer, Integer> evaluateGuess(Code code, Code guess) {
-        int blackPegs = 0;
-        int whitePegs = 0;
-        boolean[] usedInCode = new boolean[Mastermind.CODE_LENGTH];
-        boolean[] usedInGuess = new boolean[Mastermind.CODE_LENGTH];
-
-        // count black pegs
-        for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
-            if (code.getColor(i) == guess.getColor(i)) {
-                blackPegs++;
-                usedInCode[i] = true;
-                usedInGuess[i] = true;
-            }
-        }
-
-        // count white pegs
-        for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
-            if (!usedInGuess[i]) {
-                for (int j = 0; j < Mastermind.CODE_LENGTH; j++) {
-                    if (!usedInCode[j] && code.getColor(j) == guess.getColor(i)) {
-                        whitePegs++;
-                        usedInCode[j] = true;
-                        break;
-                    }
-                }
-            }
-        }
-        
-        return new Pair<>(blackPegs, whitePegs);
+        Response response = new Response(code, guess);
+        return response.getResponse();
     }
+
 }
