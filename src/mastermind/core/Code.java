@@ -31,6 +31,14 @@ public class Code {
         this.code = codeBuilder;
     }
 
+    public Code(String codeString) {
+        this.code = new ArrayList<>();
+        String[] colors = codeString.split(" ");
+        for (String colorString : colors) {
+            this.code.add(Color.valueOf(colorString));
+        }
+    }
+    
 
     public Color getColor(final int index) {
         return code.get(index);

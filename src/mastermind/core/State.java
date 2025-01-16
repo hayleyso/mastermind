@@ -6,7 +6,7 @@ public class State {
     private String mode;
     private String createLevel;
     private String guessLevel;
-    private boolean gameFinished;
+    private boolean isGameFinished;
 
     private State() {}
 
@@ -53,11 +53,13 @@ public class State {
         this.mode = gameMode;
     }
 
-    public void setGameFinished(boolean isGameFinished) {
-        this.gameFinished = isGameFinished;
+    public void setGameFinished(boolean isFinished) {
+        this.isGameFinished = isFinished;
     }    
 
     public boolean isGameFinished() {
-        return gameFinished;
+        return isGameFinished;
     }
+    
+    
 }

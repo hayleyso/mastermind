@@ -1,17 +1,19 @@
 package mastermind;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import mastermind.core.State;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -63,7 +65,7 @@ public class Utils {
         try (Scanner scanner = new Scanner(new File(GUESS_LEADERBOARD_FILE))) {
             List<String[]> entries = new ArrayList<>();
 
-            // Skip header if exists
+            // skip header if exists
             if (scanner.hasNextLine()) {
                 String header = scanner.nextLine();
                 if (!header.startsWith("Rank")) {
@@ -71,15 +73,15 @@ public class Utils {
                 }
             }
 
-            // Read existing entries
+            // read existing entries
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 if (line.trim().isEmpty())
                     continue;
                 String[] parts = line.split("\\|");
-                // Remove rank from parts since we'll recalculate it
+
                 entries.add(new String[] {
-                        parts[1].trim(), // username
+                        parts[1].trim(),
                         parts[2].trim(), // level
                         parts[3].trim(), // mode
                         parts[4].trim(), // attempts
@@ -87,7 +89,7 @@ public class Utils {
                 });
             }
 
-            // Add new entry
+            // add new entry
             entries.add(new String[] {
                     username,
                     level,
@@ -96,25 +98,25 @@ public class Utils {
                     String.format("%d:%02d", timeInMillis / 60000, (timeInMillis % 60000) / 1000)
             });
 
-            // Sort entries
+            // sort entries
             Collections.sort(entries, (a, b) -> {
-                // Sort by level (Hard > Medium > Easy)
+                // sort by level (hard > nedium > easy)
                 int levelCompare = b[1].compareTo(a[1]);
                 if (levelCompare != 0)
                     return levelCompare;
 
-                // Sort by attempts
+                // sort by attempts
                 int attemptCompare = Integer.compare(
                         Integer.parseInt(a[3]),
                         Integer.parseInt(b[3]));
                 if (attemptCompare != 0)
                     return attemptCompare;
 
-                // Sort by time
+                // sort by time
                 return a[4].compareTo(b[4]);
             });
 
-            // Write header and entries
+            // write header and entries
             try (PrintWriter writer = new PrintWriter(new FileWriter("leaderboard.txt"))) {
                 writer.println(
                         "Rank            |          Username          |            Level          |            Mode          |                # of attempts           |              Time taken");
@@ -164,16 +166,101 @@ public class Utils {
         writer.close();
     }
 
+    // public static void saveGameState(String username, int row, List<String> guesses, List<String> responses) throws IOException {
+    //     File file = new File(DIRECTORY_PATH + username + ".txt");
+    //     try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
+    //         writer.write(guesses.get(row) + "|" + responses.get(row) + "\n");
+    //     }        
+    // }
+    
     public static void saveGameState(String username, int row, List<String> guesses, List<String> responses) throws IOException {
         File file = new File(DIRECTORY_PATH + username + ".txt");
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
-            writer.write(guesses.get(row) + "|" + responses.get(row) + "\n");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, false))) { // false to overwrite
+            writer.write(State.getInstance().getGameMode() + "\n");
+            writer.write(State.getInstance().getCreateDifficultyLevel() + "\n");
+            
+            for (int i = 0; i <= row && i < guesses.size(); i++) {
+                writer.write(guesses.get(i) + "|");
+                if (i < responses.size()) {
+                    writer.write(responses.get(i));
+                }
+                writer.newLine();
+            }
         }
-    }
+    }    
+    
+    public static void saveInitialGuess(String username, String initialGuess) throws IOException {
+        File file = new File(DIRECTORY_PATH + username + ".txt");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
+            writer.write(initialGuess + "\n");
+        }
+    }    
+
+    public static void saveNextGuess(String username, String guess) throws IOException {
+        File file = new File(DIRECTORY_PATH + username + ".txt");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
+            writer.write(guess + "\n");
+        }
+    }    
 
     public static void deleteGameState(String username) throws IOException {
         File file = new File(DIRECTORY_PATH + username + ".txt");
         file.delete();
+    }
+
+    public static String[] loadGameState(String username) throws IOException {
+        File file = new File(DIRECTORY_PATH + username + ".txt");
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String mode = reader.readLine();
+            String secondLine = reader.readLine();
+            return new String[]{mode, secondLine};
+        }
+    }
+    
+    public static List<Pair<String, String>> loadCreateGuessesAndResponses(String username) {
+        File file = new File(DIRECTORY_PATH + username + ".txt");
+        List<Pair<String, String>> guessesAndResponses = new ArrayList<>();
+    
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            reader.readLine();
+            reader.readLine();
+    
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("\\|");
+                if (parts.length == 2) {
+                    guessesAndResponses.add(new Pair<>(parts[0], parts[1]));
+                } else {
+                    guessesAndResponses.add(new Pair<>(line, ""));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    
+        return guessesAndResponses;
+    }    
+
+    public static List<Pair<String, String>> loadGuessGuessesAndResponses(String username) {
+        File file = new File(DIRECTORY_PATH + username + ".txt");
+        List<Pair<String, String>> guessesAndResponses = new ArrayList<>();
+    
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            reader.readLine(); // Skip mode
+            reader.readLine(); // Skip secret code
+    
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("\\|");
+                if (parts.length == 2) {
+                    guessesAndResponses.add(new Pair<>(parts[0].trim(), parts[1].trim()));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    
+        return guessesAndResponses;
     }
 
     public static String formatTime(final long timeTaken) {

@@ -47,6 +47,43 @@ public class Response {
         response = new Pair<>(correctCount, misplacedCount);
     }
 
+    public Response(String responseString) {
+        if (responseString == null || responseString.isEmpty()) {
+            this.response = new Pair<>(0, 0);
+        } else {
+            String[] parts = responseString.split("B|W");
+            int blacks = parts.length > 1 ? Integer.parseInt(parts[1]) : 0;
+            int whites = parts.length > 2 ? Integer.parseInt(parts[2]) : 0;
+            this.response = new Pair<>(blacks, whites);
+        }
+        
+        this.pegColors = new ArrayList<>();
+        for (int i = 0; i < response.getKey(); i++) {
+            pegColors.add("BLACK");
+        }
+        for (int i = 0; i < response.getValue(); i++) {
+            pegColors.add("WHITE");
+        }
+        while (pegColors.size() < Mastermind.CODE_LENGTH) {
+            pegColors.add("NONE");
+        }
+    }
+    
+    
+    public Response(Pair<Integer, Integer> response) {
+        this.response = response;
+        this.pegColors = new ArrayList<>();
+        
+        for (int i = 0; i < response.getKey(); i++) {
+            pegColors.add("BLACK");
+        }
+        for (int i = 0; i < response.getValue(); i++) {
+            pegColors.add("WHITE");
+        }
+        while (pegColors.size() < Mastermind.CODE_LENGTH) {
+            pegColors.add("NONE");
+        }
+    }
 
     public Pair<Integer, Integer> getResponse() {
         return this.response;
@@ -58,7 +95,7 @@ public class Response {
 
     @Override
     public String toString() {
-        return "B" + response.getKey() + "B" + "W" + response.getValue();
+        return "B" + response.getKey() + "W" + response.getValue();
     }
 
 

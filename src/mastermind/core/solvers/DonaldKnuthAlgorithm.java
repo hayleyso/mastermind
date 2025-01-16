@@ -54,7 +54,6 @@ public class DonaldKnuthAlgorithm extends MastermindAlgorithm {
             reducePermutations(response);
         }
 
-        // If permutations become empty due to wrong input, reset and retry
         if (permutations.isEmpty()) {
             permutations = new HashSet<>(originalPermutations);
             isRetry = true;
@@ -64,7 +63,6 @@ public class DonaldKnuthAlgorithm extends MastermindAlgorithm {
         isRetry = false;
         final Code nextGuess = findNextGuess();
         
-        // If no valid guess found, retry previous guess
         if (nextGuess == null) {
             isRetry = true;
             return previousGuess;
