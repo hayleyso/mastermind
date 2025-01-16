@@ -21,7 +21,6 @@ import mastermind.core.solvers.MediumAlgorithm;
 import java.io.IOException;
 import javafx.util.Duration;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class GameBoard {
     @FXML
@@ -59,8 +58,8 @@ public class GameBoard {
 
     private String username;
     private String mode;
-    private String guessLevel; // for file input
     private String createLevel;
+    private String guessLevel;
     private Pair<Integer, Integer> pegCounts;
     private List<String> guesses = new ArrayList<>();
     private List<String> responses = new ArrayList<>();
@@ -81,7 +80,6 @@ public class GameBoard {
     private int numPegs;
     private long startTime;
     private long endTime;
-    private boolean isGameFinished;
     private boolean isFirstGuess = true;
 
     public GameBoard() {
@@ -127,10 +125,11 @@ public class GameBoard {
 
     private void startNewGame() throws IOException {
         if ("guess".equals(mode)) {
+            guessLevel = state.getGuessDifficultyLevel();
             generatedCode = Code.generateRandomCode();
             hideCode();
             text.setText("Please enter your guess.");
-            Utils.saveToFile(username, mode, generatedCode);
+            Utils.saveToFile(username, mode, guessLevel, generatedCode);
             responseButtons.setVisible(false);
         } else if ("create".equals(mode)) {
             createLevel = state.getCreateDifficultyLevel();
@@ -146,13 +145,6 @@ public class GameBoard {
         blackButton.setDisable(true);
         whiteButton.setDisable(true);
         resetButton.setDisable(true);
-    }
-
-    private void enableResponseButtons() {
-        whiteButton.setDisable(false);
-        blackButton.setDisable(false);
-        resetButton.setDisable(false);
-        checkButton.setDisable(false);
     }
 
     private void enableGuessButtons() {
@@ -321,7 +313,7 @@ public class GameBoard {
         responses.add(resp.toString());
 
         try {
-            Utils.saveGameState(username, currentGuessRow, guesses, responses);
+            Utils.saveGuessGameState(username, currentGuessRow, guesses, responses);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -337,31 +329,31 @@ public class GameBoard {
 
             endTime = System.currentTimeMillis();
             long timeTaken = endTime - startTime;
-            isGameFinished = true;
+            Utils.updateLeaderBoard(username, guessLevel, mode, currentGuessRow, timeTaken);
 
             try {
                 Utils.deleteGameState(username);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Utils.updateLeaderBoard(username, createLevel, mode, currentCreateColumn, timeTaken);
 
         } else {
             currentGuessRow++;
 
             if (resp.getResponse().getKey() == 0 && resp.getResponse().getValue() == 0) {
-                text.setText("None correct. " + "You have attempt" + ((Mastermind.NUM_GUESSES - currentGuessRow) != 1 ? "s" : "") + " left.");
+                int attemptsLeft = Mastermind.NUM_GUESSES - currentGuessRow;
+                text.setText("None correct. You have " + attemptsLeft + " attempt" + (attemptsLeft != 1 ? "s" : "") + " left.");
             } else {
                 int attemptsLeft = Mastermind.NUM_GUESSES - currentGuessRow;
-                text.setText("You have attempt" + (attemptsLeft != 1 ? "s" : "") + " left.");
-            }
+                text.setText("You have " + attemptsLeft + " attempt" + (attemptsLeft != 1 ? "s" : "") + " left.");
+            }            
 
             if (currentGuessRow >= Mastermind.NUM_GUESSES) {
                 text.setText("I'm sorry, you lose.");
                 revealCode();
                 nextButton.setVisible(true);
                 disableAllButtons();
-                isGameFinished = true;
+
                 try {
                     Utils.deleteGameState(username);
                 } catch (IOException e) {
@@ -486,9 +478,7 @@ public class GameBoard {
         guesses.add(nextGuess.toString());
     
         try {
-            // Save current response
-            Utils.saveGameState(username, currentGuessRow - 1, guesses, responses);
-            // Save next guess without response
+            Utils.saveCreateGameState(username, currentGuessRow - 1, guesses, responses);
             Utils.saveNextGuess(username, nextGuess.toString());
         } catch (IOException e) {
             e.printStackTrace();
@@ -499,7 +489,6 @@ public class GameBoard {
             for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
                 displayColors(nextGuess.getColor(i), createGrid, i, 0);
             }
-            isGameFinished = true;
             disableAllButtons();
             PauseTransition pause = new PauseTransition(Duration.seconds(2));
             pause.setOnFinished(event -> {
@@ -517,7 +506,6 @@ public class GameBoard {
     
         if (currentGuessRow == Mastermind.NUM_GUESSES) {
             text.setText("The computer couldn't guess your code. Enter your correct code.");
-            isGameFinished = true;
             try {
                 Utils.deleteGameState(username);
             } catch (IOException e) {
@@ -548,7 +536,7 @@ public class GameBoard {
 
     private void hideCode() {
         for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
-            Circle grayCircle = new Circle(14);
+            Circle grayCircle = new Circle(12);
             grayCircle.setFill(Color.GRAY);
             createGrid.add(grayCircle, i, 0);
         }
@@ -556,7 +544,7 @@ public class GameBoard {
 
     private void revealCode() {
         for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
-            Circle dot = new Circle(14);
+            Circle dot = new Circle(12);
             dot.setFill(Utils.getGUIColor(generatedCode.getColor(i)));
             createGrid.add(dot, i, 0);
         }
@@ -619,7 +607,8 @@ public class GameBoard {
     }
     
     private void loadUnfinishedGuessMode(String[] gameState) throws IOException {
-        generatedCode = new Code(gameState[1]);
+        guessLevel = gameState[1];
+        generatedCode = new Code(gameState[2]);
         hideCode();
     
         List<Pair<String, String>> guessesAndResponses = Utils.loadGuessGuessesAndResponses(username);
