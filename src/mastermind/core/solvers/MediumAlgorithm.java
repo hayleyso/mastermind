@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Medium algorithm is an improved Mastermind solver that narrows down possible
+ * An improved Mastermind algorithm that narrows down possible
  * code guesses based on previous feedback. It generates all possible code
  * combinations initially, filters out invalid guesses based on the feedback,
  * and then randomly selects the next guess.

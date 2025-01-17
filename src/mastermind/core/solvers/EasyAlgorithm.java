@@ -13,9 +13,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * EasyAlgorithm is a solver for the Mastermind game. It generates guesses based
- * on previous responses, starting with a simple guess and gradually shuffling
- * correct colors as more feedback is received.
+ * Simple Mastermind algorithm that starts with repetitive guesses and refines
+ * them based on feedback, eventually shuffling correct colors to generate new
+ * guesses.
  */
 public class EasyAlgorithm extends MastermindAlgorithm {
     // Array to hold all possible colors for pegs
