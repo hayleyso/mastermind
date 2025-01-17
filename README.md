@@ -1,5 +1,5 @@
 # Mastermind Game
-Mastermind is a code-breaking game where the objective is to guess a secret code within a set number of attempts. The code consists of a sequence of four colors, and after each guess, the player receives feedback in the form of hints indicating how many colors are correct and in the correct position. The game can be played with either the player setting the code for the program to guess or the program setting the code for the player to break. The goal is to guess the correct code in as few attempts as possible!
+Mastermind is a code-breaking game where the objective is to guess a secret four color code within a limited number of attempts. After each guess, the player receives feedback on how many colors are correct and in the correct position. The game can be played in two modes: the player sets the code for the program to guess, or the program sets the code for the player to break. The goal is to guess the code in as few attempts as possible while using the feedback to refine each guess.
 
 ### Required Features:
 - **Gameplay with GUI**: Play the game through a user-friendly graphical interface.
