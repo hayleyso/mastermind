@@ -1,3 +1,8 @@
+/*
+    Author: Hayley So
+    Title: GameBoard.java
+    Date: 2025-01-15
+ */
 package mastermind.controllers;
 
 import javafx.animation.PauseTransition;
@@ -22,6 +27,9 @@ import java.io.IOException;
 import javafx.util.Duration;
 import java.util.*;
 
+/**
+ * Controller for the Mastermind game board. 
+ */
 public class GameBoard {
     @FXML
     private Button greenButton;
@@ -81,7 +89,7 @@ public class GameBoard {
     private long startTime;
     private long endTime;
     private boolean isFirstGuess = true;
-
+    
     public GameBoard() {
         this.guesses = new ArrayList<>();
         this.responses = new ArrayList<>();
@@ -173,7 +181,7 @@ public class GameBoard {
         solver = switch (createLevel) {
             case "easy" -> new EasyAlgorithm();
             case "medium" -> new MediumAlgorithm();
-            case "hard" -> new DonaldKnuthAlgorithm(createLevel);
+            case "hard" -> new DonaldKnuthAlgorithm();
             default -> throw new IllegalStateException(createLevel);
         };
         return solver;
@@ -329,7 +337,7 @@ public class GameBoard {
 
             endTime = System.currentTimeMillis();
             long timeTaken = endTime - startTime;
-            Utils.updateLeaderBoard(username, guessLevel, mode, currentGuessRow, timeTaken);
+            Utils.updateLeaderBoard(username, guessLevel, currentGuessRow, timeTaken);
 
             try {
                 Utils.deleteGameState(username);
@@ -495,7 +503,7 @@ public class GameBoard {
                 validateResponses(nextGuess);
             });
             pause.play();
-    
+        
             try {
                 Utils.deleteGameState(username);
             } catch (IOException e) {
@@ -527,7 +535,6 @@ public class GameBoard {
                     " guesses. Please provide feedback, when done press check.");
     }    
     
-    // computer's guess
     private void displayGuess(Code guess) {
         for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
             displayColors(guess.getColor(i), guessGrid, i, currentGuessRow);
@@ -566,6 +573,8 @@ public class GameBoard {
     private void loadUnfinishedCreateMode(String[] gameState) throws IOException {
         createLevel = gameState[1];
         solver = setUpSolver(createLevel);
+        List<Code> previousGuesses = new ArrayList<>();
+        List<Pair<Integer, Integer>> previousResponses = new ArrayList<>();
         
         List<Pair<String, String>> guessesAndResponses = Utils.loadCreateGuessesAndResponses(username);
         
@@ -573,12 +582,14 @@ public class GameBoard {
             Pair<String, String> pair = guessesAndResponses.get(i);
             Code guess = new Code(pair.getKey());
             computerGuesses.add(guess);
+            previousGuesses.add(guess);
             guesses.add(pair.getKey());
             
             if (i < guessesAndResponses.size() - 1) {
                 Response response = new Response(pair.getValue());
                 Pair<Integer, Integer> responsePair = response.getResponse();
                 userResponses.add(responsePair);
+                previousResponses.add(responsePair);
                 responses.add(pair.getValue());
                 displayResponse(response);
                 
@@ -594,6 +605,7 @@ public class GameBoard {
             currentGuessRow++;
             currentResponseRow = currentGuessRow * 2;
         }
+
         
         currentResponseRow -= 2;
         tempResponseRow = currentResponseRow;
@@ -602,8 +614,13 @@ public class GameBoard {
         isFirstGuess = false;
         numPegs = 0;
         
-        text.setText("Welcome back, " + username + ". You are on row + " + (currentGuessRow + 1) +  ". Please provide feedback for the computer's guess.");
+        text.setText("Welcome back, " + username + ". You are on row " + (currentGuessRow + 1) +  ". Please provide feedback for the computer's guess.");
         disableColorButtons();
+
+        if (solver instanceof DonaldKnuthAlgorithm) {
+            Code lastGuess = previousGuesses.get(previousGuesses.size() - 1);
+            ((DonaldKnuthAlgorithm) solver).restoreState(lastGuess, previousResponses);
+        }
     }
     
     private void loadUnfinishedGuessMode(String[] gameState) throws IOException {

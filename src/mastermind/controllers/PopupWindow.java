@@ -1,3 +1,8 @@
+/*
+    Author: Hayley So
+    Title: PopupWindow.java
+    Date: 2025-01-15
+ */
 package mastermind.controllers;
 
 import java.io.IOException;
@@ -9,6 +14,10 @@ import javafx.stage.Stage;
 import mastermind.Utils;
 import mastermind.core.State;
 
+/**
+ * Controller class for the popup window for returning players with unfinished games. 
+ * Allows the option to return or start a new game.
+ */
 public class PopupWindow {
     @FXML
     private Button newGameButton;
@@ -17,11 +26,20 @@ public class PopupWindow {
     @FXML
     private Text text;
 
+    /**
+     * Displays welcome message
+     */
     @FXML
     void initialize() {
         text.setText("Welcome back, " + State.getInstance().getUsername() + "!");
     }
 
+    /**
+     * Handles the event where the user clicks the new game button. 
+     * 
+     * @param event
+     * @throws IOException
+     */
     @FXML
     void onNewGameBtnClick(ActionEvent event) throws IOException {
         Stage stage = (Stage) newGameButton.getScene().getWindow();
@@ -30,6 +48,12 @@ public class PopupWindow {
         Utils.deleteGameState(State.getInstance().getUsername());
     }
 
+    /**
+     * Hanldes the event where the user clicks the return to game button.
+     * 
+     * @param event
+     * @throws IOException
+     */
     @FXML
     void onReturnBtnClick(ActionEvent event) throws IOException {
         State.getInstance().setGameFinished(false);
