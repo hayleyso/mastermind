@@ -90,11 +90,19 @@ public class GameBoard {
     private long endTime;
     private boolean isFirstGuess = true;
     
+    /**
+     * Constructor
+     */
     public GameBoard() {
         this.guesses = new ArrayList<>();
         this.responses = new ArrayList<>();
     }
 
+    /**
+     * Initializes the game board, setting up the initial state based on whether there's an unfinished game or a new game needs to be started.
+     * 
+     * @throws IOException if there's an error loading or saving game state
+     */
     @FXML
     public void initialize() throws IOException {
         username = state.getUsername();
@@ -120,6 +128,11 @@ public class GameBoard {
         handleButtonActions();
     }
 
+    /**
+     * Loads an unfinished game state from saved data
+     * 
+     * @throws IOException
+     */
     private void loadUnfinishedGame() throws IOException {
         String[] gameState = Utils.loadGameState(username);
         mode = gameState[0];
@@ -131,6 +144,11 @@ public class GameBoard {
         }
     }
 
+    /**
+     * Set up initial state for a new game based on game mode.
+     * 
+     * @throws IOException
+     */
     private void startNewGame() throws IOException {
         if ("guess".equals(mode)) {
             guessLevel = state.getGuessDifficultyLevel();
@@ -149,12 +167,18 @@ public class GameBoard {
         }
     }
 
+    /**
+     * Disables the response buttons including the black, white, and reset button.
+     */
     private void disableResponseButtons() {
         blackButton.setDisable(true);
         whiteButton.setDisable(true);
         resetButton.setDisable(true);
     }
 
+    /**
+     * Enables guess buttons including the color, check, and reset button.
+     */
     private void enableGuessButtons() {
         Button[] colorButtons = { greenButton, redButton, blueButton, yellowButton, orangeButton, purpleButton };
         for (Button button : colorButtons) {
@@ -164,6 +188,9 @@ public class GameBoard {
         resetButton.setDisable(false);
     }
 
+    /**
+     * Enable buttons for code reveal in create mode after the game has ended and if the computer could not guess the user's code.
+     */
     private void enableButtonsForCodeReveal() {
         checkButton.setDisable(false);
         resetButton.setDisable(false);
@@ -177,6 +204,12 @@ public class GameBoard {
         resetButton.setOnAction(event -> resetCreate());
     }
 
+    /**
+     * Set up the solver algorithm based on the selected difficulty.
+     * 
+     * @param level The difficulty level of the game.
+     * @return The initialized algorithm.
+     */
     private MastermindAlgorithm setUpSolver(String level) {
         solver = switch (createLevel) {
             case "easy" -> new EasyAlgorithm();
@@ -187,6 +220,9 @@ public class GameBoard {
         return solver;
     }
 
+    /**
+     * Sets up visual properties of all the game buttons.
+     */
     private void setUpButtons() {
         Button[] colorButtons = { greenButton, redButton, blueButton, yellowButton, orangeButton, purpleButton };
         for (Button button : colorButtons) {
@@ -209,6 +245,9 @@ public class GameBoard {
         nextButton.setVisible(false);
     }
 
+    /**
+     * Sets up the action handles for the game buttons based on the game mode.
+     */
     private void handleButtonActions() {
         if ("guess".equals(mode)) {
             greenButton.setOnAction(event -> addColorToGuessGrid(Code.Color.GREEN));
@@ -234,6 +273,9 @@ public class GameBoard {
         }
     }
 
+    /**
+     * Handles the action when the check button ic clicked during create mode.
+     */
     private void onCheckButtonClick() {
         if (isFirstGuess) {
             try {
@@ -248,6 +290,9 @@ public class GameBoard {
         }
     }
 
+    /**
+     * Handles the iniital guess in create mode.
+     */
     private void handleInitialGuess() {
         displayGuess(initialGuess);
         text.setText("Please add black and/or white pegs or press check again if no correct colors. ");
@@ -264,6 +309,11 @@ public class GameBoard {
         currentGuessRow++;
     }
 
+    /**
+     * Adds a color to the create grid.
+     * 
+     * @param color The color to add.
+     */
     private void addColorToCreateGrid(Code.Color color) {
         if (currentCreateColumn < Mastermind.CODE_LENGTH) {
             displayColors(color, createGrid, currentCreateColumn, 0);
@@ -271,6 +321,11 @@ public class GameBoard {
         }
     }
 
+    /**
+     * Adds a color to the guess grid
+     * 
+     * @param color The {@link Code.Color} color to add.
+     */
     private void addColorToGuessGrid(Code.Color color) {
         if (currentGuessColumn < Mastermind.CODE_LENGTH && currentGuessRow <= Mastermind.NUM_GUESSES) {
             displayColors(color, guessGrid, currentGuessColumn, currentGuessRow);
@@ -278,23 +333,40 @@ public class GameBoard {
         }
     }
 
+    /**
+     * Displays a color on the specified grid.
+     * 
+     * @param color the color to display
+     * @param grid the grid to display the color on
+     * @param col the column to place the color
+     * @param row the row to place the color
+     */
     private void displayColors(Code.Color color, GridPane grid, int col, int row) {
         Circle dot = new Circle(12);
         dot.setFill(Utils.getGUIColor(color));
         grid.add(dot, col, row);
     }
 
+    /**
+     * Resets the current guess row.
+     */
     private void resetGuess() {
         guessGrid.getChildren()
                 .removeIf(node -> GridPane.getRowIndex(node) != null && GridPane.getRowIndex(node) == currentGuessRow);
         currentGuessColumn = 0;
     }
 
+    /**
+     * Resets the create grid.
+     */
     private void resetCreate() {
         createGrid.getChildren().removeIf(node -> GridPane.getColumnIndex(node) != null);
         currentCreateColumn = 0;
     }
 
+    /**
+     * Submits the current guess and processes the game logic.
+     */
     private void submitGuess() {
         if (currentGuessColumn < Mastermind.CODE_LENGTH) {
             text.setText("Invalid. Please enter 4 colors.");
@@ -372,6 +444,11 @@ public class GameBoard {
         currentGuessColumn = 0;
     }
 
+    /**
+     * Displays the response pegs for a guess.
+     * 
+     * @param resp The {@link Response} object containing the feedback.
+     */
     private void displayResponse(Response resp) {
         List<String> pegColors = resp.getPegColors();
         List<Circle> pegs = new ArrayList<>();
@@ -398,6 +475,9 @@ public class GameBoard {
         currentResponseRow += 2;
     }
 
+    /**
+     * Submits the code created by the user in create mode.
+     */
     private void submitCode() {
         if (currentCreateColumn < Mastermind.CODE_LENGTH) {
             text.setText("Invalid. Please enter 4 colours.");
@@ -424,6 +504,11 @@ public class GameBoard {
         validateResponses(userCode);
     }
 
+    /**
+     * Validates the users responses against the actual code.
+     * 
+     * @param userCode The {@link Code} created by the user.
+     */
     private void validateResponses(Code userCode) {
         List<Integer> mistakeRows = new ArrayList<>();
 
@@ -453,6 +538,11 @@ public class GameBoard {
         nextButton.setVisible(true);
     }
 
+    /**
+     * Add response pegs to the response grid.
+     * 
+     * @param color The color {@link Color} of the response peg.
+     */
     private void addResponse(Color color) {
         if (numPegs < Mastermind.CODE_LENGTH) {
             int column = numPegs % 2;
@@ -468,6 +558,9 @@ public class GameBoard {
         }
     }
 
+    /**
+     * Resets the current response row.
+     */
     private void resetResponse() {
         responseGrid.getChildren().removeIf(node -> GridPane.getRowIndex(node) != null &&
                 (GridPane.getRowIndex(node) == tempResponseRow ||
@@ -476,6 +569,9 @@ public class GameBoard {
         tempResponseRow = currentResponseRow;
     }
 
+    /**
+     * Submits the user's response and processes the computer's next guess.
+     */
     private void submitResponse() {
         numPegs = 0;
         pegCounts = Utils.countResponsePegs(responseGrid, currentResponseRow);
@@ -535,12 +631,20 @@ public class GameBoard {
                     " guesses. Please provide feedback, when done press check.");
     }    
     
+    /**
+     * Displays a guess on the guess grid from the solver.
+     * 
+     * @param guess The {@link Code} object representing the guess.
+     */
     private void displayGuess(Code guess) {
         for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
             displayColors(guess.getColor(i), guessGrid, i, currentGuessRow);
         }
     }
 
+    /**
+     * Hides the code in guess mode.
+     */
     private void hideCode() {
         for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
             Circle grayCircle = new Circle(12);
@@ -549,6 +653,9 @@ public class GameBoard {
         }
     }
 
+    /**
+     * Reveals the secret hode.
+     */
     private void revealCode() {
         for (int i = 0; i < Mastermind.CODE_LENGTH; i++) {
             Circle dot = new Circle(12);
@@ -557,6 +664,9 @@ public class GameBoard {
         }
     }
 
+    /**
+     * Disables all buttons.
+     */
     private void disableAllButtons() {
         checkButton.setDisable(true);
         resetButton.setDisable(true);
@@ -565,11 +675,23 @@ public class GameBoard {
         disableColorButtons();
     }
 
+    /**
+     * Handles the action when the next button is clicked.
+     * 
+     * @param event the ActionEvent triggered by clicking the next button
+     * @throws IOException if there's an error loading the next scene
+     */
     @FXML
     void onNextBtnClick(ActionEvent event) throws IOException {
         Utils.loadScene(event, "/mastermind/gui/fxml/GameOver.fxml");
     }
 
+    /**
+     * Loads an unfinished game in create mode. 
+     * 
+     * @param gameState The saved game state
+     * @throws IOException
+     */
     private void loadUnfinishedCreateMode(String[] gameState) throws IOException {
         createLevel = gameState[1];
         solver = setUpSolver(createLevel);
@@ -623,6 +745,12 @@ public class GameBoard {
         }
     }
     
+    /**
+     * Loads an unfinished game in guess mode. 
+     * 
+     * @param gameState The saved game state
+     * @throws IOException
+     */
     private void loadUnfinishedGuessMode(String[] gameState) throws IOException {
         guessLevel = gameState[1];
         generatedCode = new Code(gameState[2]);
@@ -659,6 +787,9 @@ public class GameBoard {
         whiteButton.setVisible(false);
     }
     
+    /**
+     * Disables all color buttons.
+     */
     public void disableColorButtons() {
         Button[] colorButtons = { greenButton, redButton, blueButton, yellowButton, orangeButton, purpleButton };
         for (Button button : colorButtons) {
