@@ -1,7 +1,7 @@
 # Mastermind Game
 Mastermind is a code-breaking game where the objective is to guess a secret four color code within a limited number of attempts. After each guess, the player receives feedback on how many colors are correct and in the correct position. The game can be played in two modes: the player sets the code for the program to guess, or the program sets the code for the player to break. The goal is to guess the code in as few attempts as possible while using the feedback to refine each guess.
 
-### Required Features:
+### Supproted Features:
 - **Gameplay with GUI**: Play the game through a user-friendly graphical interface.
 - **Algorithm Solvers**: The program can guess the code set by the player.
   - **Donald Knuth's Algorithm**: A highly optimized algorithm that solves the code in ~5 guesses.
@@ -20,6 +20,9 @@ Mastermind is a code-breaking game where the objective is to guess a secret four
 - **Popup Window**: Displays a prompt if there is an unfinished game, offering the player the option to either return to it or start a new game.
 - **Home Button**: Quickly returns the player to the main menu or home screen for easy navigation.
 - **New Game**: Enables players to start a new game with a different mode or level, providing variety in gameplay.
+
+## Javadocs
+For detailed API documentation, you can view the [Javadocs](https://hayleyso07.github.io/Mastermind/index.html) of this project.
 
 ## Prerequisites
 Before you begin, ensure you have the following installed:
