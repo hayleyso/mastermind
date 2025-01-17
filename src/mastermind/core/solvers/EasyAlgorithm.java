@@ -13,8 +13,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * EasyAlgorithm is a solver for the Mastermind game. It generates guesses based on previous responses,
- * starting with a simple guess and gradually shuffling correct colors as more feedback is received.
+ * EasyAlgorithm is a solver for the Mastermind game. It generates guesses based
+ * on previous responses, starting with a simple guess and gradually shuffling
+ * correct colors as more feedback is received.
  */
 public class EasyAlgorithm extends MastermindAlgorithm {
     // Array to hold all possible colors for pegs
@@ -30,7 +31,8 @@ public class EasyAlgorithm extends MastermindAlgorithm {
     private boolean shufflingPhase = false;
 
     /**
-     * Makes the first guess, which is the color represented by the first value in COLORS repeated for the length of the code.
+     * Makes the first guess, which is the color represented by the first value in
+     * COLORS repeated for the length of the code.
      * 
      * @return the first guess as a Code object
      */
@@ -43,7 +45,8 @@ public class EasyAlgorithm extends MastermindAlgorithm {
 
     /**
      * Makes a guess based on the response to the previous guess.
-     * The guess will either be an extension of the current guess or a shuffle of correct colors.
+     * The guess will either be an extension of the current guess or a shuffle of
+     * correct colors.
      * 
      * @param response the feedback from the last guess (correct, misplaced)
      * @return the new guess as a Code object
@@ -71,7 +74,8 @@ public class EasyAlgorithm extends MastermindAlgorithm {
                 }
             }
 
-            // If not all code positions are filled, fill the remaining positions with the next color
+            // If not all code positions are filled, fill the remaining positions with the
+            // next color
             if (totalPegs < Mastermind.CODE_LENGTH) {
                 currentColorIndex++;
                 if (currentColorIndex >= COLORS.length) {
@@ -98,7 +102,8 @@ public class EasyAlgorithm extends MastermindAlgorithm {
                 lastGuess = new Code(shuffledGuess);
             }
         } else {
-            // Shuffle the correct colors while ensuring the new guess isn't the same as the last guess
+            // Shuffle the correct colors while ensuring the new guess isn't the same as the
+            // last guess
             List<Integer> shuffledGuess = new ArrayList<>(correctColors);
             do {
                 Collections.shuffle(shuffledGuess);

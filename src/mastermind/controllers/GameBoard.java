@@ -28,7 +28,7 @@ import javafx.util.Duration;
 import java.util.*;
 
 /**
- * Controller for the Mastermind game board. 
+ * Controller class for the Mastermind game board. 
  */
 public class GameBoard {
     @FXML

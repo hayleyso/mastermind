@@ -14,9 +14,10 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Medium algorithm is an improved Mastermind solver that narrows down possible code guesses
- * based on previous feedback. It generates all possible code combinations initially,
- * filters out invalid guesses based on the feedback, and then randomly selects the next guess.
+ * Medium algorithm is an improved Mastermind solver that narrows down possible
+ * code guesses based on previous feedback. It generates all possible code
+ * combinations initially, filters out invalid guesses based on the feedback,
+ * and then randomly selects the next guess.
  */
 public class MediumAlgorithm extends MastermindAlgorithm {
     // List to store all possible code combinations
@@ -29,7 +30,8 @@ public class MediumAlgorithm extends MastermindAlgorithm {
     private Random random;
 
     /**
-     * Constructor initializes the random number generator and generates all possible codes.
+     * Constructor initializes the random number generator and generates all
+     * possible codes.
      */
     public MediumAlgorithm() {
         // Initialize the random number generator
@@ -39,7 +41,8 @@ public class MediumAlgorithm extends MastermindAlgorithm {
     }
 
     /**
-     * Generates all possible code combinations based on the number of colors and code length.
+     * Generates all possible code combinations based on the number of colors and
+     * code length.
      */
     private void generateAllPossibleCodes() {
         // Initialize the list to store possible codes
@@ -73,13 +76,14 @@ public class MediumAlgorithm extends MastermindAlgorithm {
     @Override
     public Code guess() {
         // First guess is a code with all pegs set to the first color (0)
-        lastGuess = new Code(Arrays.asList(0, 0, 0, 0)); 
+        lastGuess = new Code(Arrays.asList(0, 0, 0, 0));
         return lastGuess;
     }
 
     /**
      * Makes a guess based on the response to the previous guess.
-     * Filters out impossible codes based on the response and selects a random valid guess.
+     * Filters out impossible codes based on the response and selects a random valid
+     * guess.
      * 
      * @param response the feedback from the last guess (correct, misplaced)
      * @return the next guess as a Code object
@@ -105,20 +109,21 @@ public class MediumAlgorithm extends MastermindAlgorithm {
     }
 
     /**
-     * Restores the state of the algorithm, including the last guess and previously received responses.
+     * Restores the state of the algorithm, including the last guess and previously
+     * received responses.
      * 
-     * @param lastGuess the previous guess made by the algorithm
+     * @param lastGuess         the previous guess made by the algorithm
      * @param previousResponses a list of feedback received for previous guesses
      */
     public void restoreState(Code lastGuess, List<Pair<Integer, Integer>> previousResponses) {
         // Regenerate all possible codes
         generateAllPossibleCodes();
-        
+
         // Filter out impossible codes based on previous responses
         for (Pair<Integer, Integer> response : previousResponses) {
             possibleCodes.removeIf(code -> !evaluateGuess(code, lastGuess).equals(response));
         }
-        
+
         // Restore the last guess
         this.lastGuess = lastGuess;
     }

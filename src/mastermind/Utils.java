@@ -31,7 +31,6 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 import mastermind.core.Code;
 
-
 /**
  * Utility class for game-related functionalities such as scene loading,
  * color mapping, leaderboard updates, and game state management.

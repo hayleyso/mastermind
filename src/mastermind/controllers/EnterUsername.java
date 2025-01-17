@@ -21,8 +21,7 @@ import mastermind.Utils;
 import mastermind.core.State;
 
 /**
- * Controller class for handling username input and determines whether the user has an unfinished game
- * and wants to resume or start a new game.
+ * Controller class for handling username input.
  */
 public class EnterUsername {
 

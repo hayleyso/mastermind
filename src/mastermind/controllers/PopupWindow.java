@@ -16,7 +16,6 @@ import mastermind.core.State;
 
 /**
  * Controller class for the popup window for returning players with unfinished games. 
- * Allows the option to return or start a new game.
  */
 public class PopupWindow {
     @FXML

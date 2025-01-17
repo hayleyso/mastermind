@@ -17,9 +17,9 @@ import mastermind.core.Code;
 import mastermind.core.Response;
 
 /**
- * This algorithm follows Donald Knuth's Five-Guess Algorithm.
- * It reduces the possible code permutations based on previous responses and selects the next guess
- * by minimizing the worst-case number of remaining possibilities.
+ * This algorithm follows Donald Knuth's Five-Guess Algorithm. It reduces the
+ * possible code permutations based on previous responses and selects the next
+ * guess by minimizing the worst-case number of remaining possibilities.
  */
 public class DonaldKnuthAlgorithm extends MastermindAlgorithm {
     // Stores the previous guess made by the algorithm
@@ -31,7 +31,8 @@ public class DonaldKnuthAlgorithm extends MastermindAlgorithm {
     // Holds the original set of permutations for retries
     private HashSet<Code> originalPermutations;
 
-    // Indicates if the algorithm is retrying the search after exhausting permutations
+    // Indicates if the algorithm is retrying the search after exhausting
+    // permutations
     private boolean isRetry = false;
 
     // List of previous guesses made by the algorithm
@@ -41,7 +42,8 @@ public class DonaldKnuthAlgorithm extends MastermindAlgorithm {
     private List<Pair<Integer, Integer>> previousResponses;
 
     /**
-     * Constructor initializes the possible permutations, previous guesses, and responses.
+     * Constructor initializes the possible permutations, previous guesses, and
+     * responses.
      */
     public DonaldKnuthAlgorithm() {
         // Generate all possible codes based on the Mastermind game settings
@@ -56,7 +58,8 @@ public class DonaldKnuthAlgorithm extends MastermindAlgorithm {
     }
 
     /**
-     * Generates all possible code permutations based on the number of colors and code length.
+     * Generates all possible code permutations based on the number of colors and
+     * code length.
      */
     private void generateAllPossibleCodes() {
         // Calculate the total number of possible code combinations
@@ -69,7 +72,7 @@ public class DonaldKnuthAlgorithm extends MastermindAlgorithm {
         for (int i = 0; i < possibilities; i++) {
             // Convert the current integer to a list of digits representing a code
             final ArrayList<Integer> codeInDigits = Utils.digitsFromBase(i, Mastermind.NUM_COLORS,
-                Mastermind.CODE_LENGTH);
+                    Mastermind.CODE_LENGTH);
             final Code code = new Code(codeInDigits);
 
             // Add the generated code to the set of permutations
@@ -99,7 +102,8 @@ public class DonaldKnuthAlgorithm extends MastermindAlgorithm {
     /**
      * Makes a guess based on the feedback received for the previous guess.
      * 
-     * @param response the feedback received from the last guess (correct and misplaced pegs)
+     * @param response the feedback received from the last guess (correct and
+     *                 misplaced pegs)
      * @return the next guess as a Code object
      */
     @Override
@@ -132,13 +136,13 @@ public class DonaldKnuthAlgorithm extends MastermindAlgorithm {
 
         // Find and return the next guess based on the remaining possibilities
         final Code nextGuess = findNextGuess();
-        
+
         // If no valid guess can be found, retry with the previous guess
         if (nextGuess == null) {
             isRetry = true;
             return previousGuess;
         }
-        
+
         // Update the previous guess with the new guess and add it to the list
         previousGuess = nextGuess;
         previousGuesses.add(nextGuess);
@@ -149,23 +153,24 @@ public class DonaldKnuthAlgorithm extends MastermindAlgorithm {
     /**
      * Reduces the set of possible permutations based on the feedback response.
      * 
-     * @param response the feedback response to use for filtering possible permutations
+     * @param response the feedback response to use for filtering possible
+     *                 permutations
      */
     private void reducePermutations(Pair<Integer, Integer> response) {
         // Create a new set to hold valid permutations based on the response
         HashSet<Code> newPermutations = new HashSet<>();
-        
+
         // Loop through each permutation and check if it matches the response
         for (Code permutation : this.permutations) {
             // Evaluate the guess for the current permutation
             Pair<Integer, Integer> testResponse = evaluateGuess(permutation, this.previousGuess);
-            
+
             // If the response matches the feedback, keep this permutation
             if (testResponse.equals(response)) {
                 newPermutations.add(permutation);
             }
         }
-        
+
         // Update the permutations set with the valid permutations
         if (!newPermutations.isEmpty()) {
             this.permutations = newPermutations;
@@ -173,41 +178,42 @@ public class DonaldKnuthAlgorithm extends MastermindAlgorithm {
     }
 
     /**
-     * Finds the next guess by minimizing the worst-case number of remaining possibilities.
+     * Finds the next guess by minimizing the worst-case number of remaining
+     * possibilities.
      * 
      * @return the next guess as a Code object
      */
     private Code findNextGuess() {
         // Create a map to store guess scores based on group sizes
         TreeMap<Integer, ArrayList<Code>> guessScores = new TreeMap<>();
-        
+
         // Evaluate each permutation as a possible guess
         for (final Code guess : this.permutations) {
             int maxGroupSize = 0;
-            
+
             // Group all permutations by their response to the current guess
             for (final Code assumedCode : this.permutations) {
                 // Get the response for the assumed code when compared to the guess
                 Pair<Integer, Integer> response = evaluateGuess(assumedCode, guess);
-                
+
                 // Count the group size for this response
                 int groupSize = (int) this.permutations.stream()
-                    .filter(code -> evaluateGuess(code, guess).equals(response))
-                    .count();
-                
+                        .filter(code -> evaluateGuess(code, guess).equals(response))
+                        .count();
+
                 // Keep track of the largest group size
                 maxGroupSize = Math.max(maxGroupSize, groupSize);
             }
-            
+
             // Store the guess in the map, categorized by the largest group size
             guessScores.computeIfAbsent(maxGroupSize, k -> new ArrayList<>()).add(guess);
         }
-        
+
         // If no guesses are available, return null
         if (guessScores.isEmpty()) {
             return null;
         }
-        
+
         // Get the best guesses based on the smallest largest group size
         ArrayList<Code> bestGuesses = guessScores.firstEntry().getValue();
 
@@ -218,7 +224,7 @@ public class DonaldKnuthAlgorithm extends MastermindAlgorithm {
     /**
      * Evaluates the response to a guess based on the actual code.
      * 
-     * @param code the actual code to compare against the guess
+     * @param code  the actual code to compare against the guess
      * @param guess the guess to evaluate
      * @return the feedback response as a Pair of integers (black pegs, white pegs)
      */
@@ -229,7 +235,8 @@ public class DonaldKnuthAlgorithm extends MastermindAlgorithm {
     }
 
     /**
-     * Restores the state of the algorithm with the last guess and previous responses.
+     * Restores the state of the algorithm with the last guess and previous
+     * responses.
      * 
      * @param lastGuess the previous guess made by the algorithm
      * @param responses a list of feedback responses for previous guesses
@@ -241,19 +248,19 @@ public class DonaldKnuthAlgorithm extends MastermindAlgorithm {
         // Reset the lists for previous guesses and responses
         previousGuesses = new ArrayList<>();
         previousResponses = new ArrayList<>();
-        
+
         // Apply all previous responses to reduce the possible permutations
         for (int i = 0; i < responses.size(); i++) {
             Pair<Integer, Integer> response = responses.get(i);
             previousResponses.add(response);
             reducePermutations(response);
         }
-        
+
         // Restore the last guess and add it to the list of previous guesses
         this.previousGuess = lastGuess;
         previousGuesses.add(lastGuess);
 
         // Reset the retry flag
         this.isRetry = false;
-    }    
+    }
 }
