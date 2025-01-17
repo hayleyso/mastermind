@@ -1,0 +1,8 @@
+Username        | Level  | Attempts | Time (0:00)
+--------------------------------------------------
+rossgeller      | hard   | 3        | 0:46
+phoebebuffay    | hard   | 5        | 1:18
+monicageller    | hard   | 7        | 2:09
+chandlerbing    | medium | 2        | 0:33
+joeytribbiani   | easy   | 5        | 0:52
+rachelgreen     | easy   | 6        | 0:56
