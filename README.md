@@ -1,3 +1,2 @@
-## Getting Started
-
-
+# Mastermind
+ICS4U1 final project
