@@ -44,8 +44,7 @@ Before you begin, ensure you have the following installed:
 
 
 ## Importing the Project
-1. **Clone the Repository or Download the Source Code**
-   - [Clone this repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) or download the source code.
+1. **[Clone this repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) or Download the Source Code**
 2. **Import the Project into Eclipse**
    - In Eclipse, go to `File > Import > General > Existing Projects into Workspace`.
    - Select the root directory of the downloaded project and click **Finish**.
