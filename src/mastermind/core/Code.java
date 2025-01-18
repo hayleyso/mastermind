@@ -14,7 +14,9 @@ import mastermind.Mastermind;
  */
 public class Code {
 
-    // Enum representing the available colors for the Mastermind code.
+    /**
+     * Enum representing the colors that can be used in the code.
+     */
     public enum Color {
         GREEN, RED, BLUE, YELLOW, ORANGE, PURPLE;
 
@@ -48,7 +50,8 @@ public class Code {
         }
     }
 
-    private final ArrayList<Color> code; // List of colors that make up the code.
+    // The list of colors in the code
+    private final ArrayList<Color> code; 
 
     /**
      * Constructs a Code instance from a list of integers representing color

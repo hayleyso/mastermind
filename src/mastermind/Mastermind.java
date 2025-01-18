@@ -18,8 +18,7 @@ import javafx.stage.Stage;
  */
 public class Mastermind extends Application {
 
-    /**
-     * The number of colors used in the game.*/
+    /** The number of colors used in the game.*/
     public final static int NUM_COLORS = 6;
 
     /** The length of the secret code. */

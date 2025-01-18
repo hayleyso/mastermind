@@ -79,7 +79,6 @@ public class Response {
 
     /**
      * Constructor to initialize the response based on a string format.
-     * The format is expected to be "B<correctCount>W<misplacedCount>" (e.g., B2W1).
      * 
      * @param responseString the response in string format
      */
@@ -161,7 +160,6 @@ public class Response {
 
     /**
      * Get the string representation of the response.
-     * The format is "B<correctCount>W<misplacedCount>" (e.g., B2W1).
      * 
      * @return the string representation of the response
      */

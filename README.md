@@ -49,7 +49,7 @@ Before you begin, ensure you have the following installed:
 
 
 ## Configuring the Project
-1. **Set JavaFX Library in Eclipse**
+**Set JavaFX Library in Eclipse**
    - Right-click on the project in Eclipse's Package Explorer.
    - Select `Properties > Java Build Path`.
    - In the `Libraries` tab, click **Add Library** and select **User Library**.
