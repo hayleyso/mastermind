@@ -44,7 +44,7 @@ Before you begin, ensure you have the following installed:
 
 
 ## Importing the Project
-1. **[Clone this repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) or Download the Source Code**
+1. **Clone this repository or download the source code**
 2. **Import the Project into Eclipse**
    - In Eclipse, go to `File > Import > General > Existing Projects into Workspace`.
    - Select the root directory of the downloaded project and click **Finish**.
@@ -62,7 +62,7 @@ Before you begin, ensure you have the following installed:
 
 ## Running the Application
 1. **Run the Main Class**
-   - Right-click on the main class file (likely named `MastermindApp.java`).
+   - Right-click on the main class file (`Mastermind.java`).
    - Select `Run As > Run Configurations`.
 2. **Set VM Arguments**
    - In the `Arguments` tab, add the following to **VM arguments**:
