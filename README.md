@@ -1,7 +1,7 @@
 # Mastermind Game
-Mastermind is a code-breaking game where the objective is to guess a secret code within a set number of attempts. The code consists of a sequence of four colors, and after each guess, the player receives feedback in the form of hints indicating how many colors are correct and in the correct position. The game can be played with either the player setting the code for the program to guess or the program setting the code for the player to break. The goal is to guess the correct code in as few attempts as possible!
+Mastermind is a code-breaking game where the objective is to guess a secret four color code within a limited number of attempts. After each guess, the player receives feedback on how many colors are correct and in the correct position. The game can be played in two modes: the player sets the code for the program to guess, or the program sets the code for the player to break. The goal is to guess the code in as few attempts as possible while using the feedback to refine each guess.
 
-### Required Features:
+### Supproted Features:
 - **Gameplay with GUI**: Play the game through a user-friendly graphical interface.
 - **Algorithm Solvers**: The program can guess the code set by the player.
   - **Donald Knuth's Algorithm**: A highly optimized algorithm that solves the code in ~5 guesses.
@@ -20,6 +20,9 @@ Mastermind is a code-breaking game where the objective is to guess a secret code
 - **Popup Window**: Displays a prompt if there is an unfinished game, offering the player the option to either return to it or start a new game.
 - **Home Button**: Quickly returns the player to the main menu or home screen for easy navigation.
 - **New Game**: Enables players to start a new game with a different mode or level, providing variety in gameplay.
+
+## Javadocs
+For detailed API documentation, you can view the [Javadocs](https://hayleyso07.github.io/Mastermind/index.html) of this project.
 
 ## Prerequisites
 Before you begin, ensure you have the following installed:
@@ -41,8 +44,7 @@ Before you begin, ensure you have the following installed:
 
 
 ## Importing the Project
-1. **Clone the Repository or Download the Source Code**
-   - [Clone this repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) or download the source code.
+1. **Clone this repository or download the source code**
 2. **Import the Project into Eclipse**
    - In Eclipse, go to `File > Import > General > Existing Projects into Workspace`.
    - Select the root directory of the downloaded project and click **Finish**.
@@ -60,7 +62,7 @@ Before you begin, ensure you have the following installed:
 
 ## Running the Application
 1. **Run the Main Class**
-   - Right-click on the main class file (likely named `MastermindApp.java`).
+   - Right-click on the main class file (`Mastermind.java`).
    - Select `Run As > Run Configurations`.
 2. **Set VM Arguments**
    - In the `Arguments` tab, add the following to **VM arguments**:
