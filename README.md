@@ -1,13 +1,13 @@
 # Mastermind Game
-Mastermind is a code-breaking game where the objective is to guess a secret four color code within a limited number of attempts. After each guess, the player receives feedback on how many colors are correct and in the correct position. The game can be played in two modes: the player sets the code for the program to guess, or the program sets the code for the player to break. The goal is to guess the code in as few attempts as possible while using the feedback to refine each guess.
+Mastermind is a code-breaking game where the objective is to guess a secret four color code within a limited number of attempts. After each guess, the player receives feedback on how many colors are correct and in the correct position. The game can be played in two modes: the player sets the code for the program to guess, or the program sets the code for the player to break. The goal is to guess the code in as few attempts as possible.
 
-### Supproted Features:
+### Supported Features:
 - **Gameplay with GUI**: Play the game through a user-friendly graphical interface.
 - **Algorithm Solvers**: The program can guess the code set by the player.
-  - **Donald Knuth's Algorithm**: A highly optimized algorithm that solves the code in ~5 guesses.
-  - **Medium Algorithm**: A balanced guessing algorithm with reasonable performance.
-  - **Basic Algorithm**: A straightforward guessing approach suitable for beginners.
-- **Human Solver**: Players can guess the code themselves, based on provided hints.
+  - **Donald Knuth's Algorithm** (Hard mode): A highly optimized algorithm that solves the code in ~5 guesses.
+  - **Medium Algorithm** (Medium mode): A balanced guessing algorithm with reasonable performance.
+  - **Basic Algorithm** (Easy mode): A straightforward guessing approach suitable for beginners.
+- **Human Solver**: Players can guess the code based on provided hints.
 - **File Handling**: Supports saving and loading game data from external files.
 - **Code Guessing Levels**: Provides multiple levels for guessing the code.
     - **Easy**: 1-3 colors
@@ -69,6 +69,6 @@ Before you begin, ensure you have the following installed:
      ```text
      --module-path /path/to/javafx-sdk-17/lib --add-modules javafx.controls,javafx.fxml
      ```
-     - Replace `/path/to/javafx-sdk-17` with the actual path to your JavaFX SDK.
+     Replace `/path/to/javafx-sdk-17` with the actual path to your JavaFX SDK.
 3. **Run the Application**
    - Click **Apply** and then **Run**.
