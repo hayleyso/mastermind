@@ -22,7 +22,7 @@ Mastermind is a code-breaking game where the objective is to guess a secret four
 - **New Game**: Enables players to start a new game with a different mode or level, providing variety in gameplay.
 
 ## Javadocs
-For detailed API documentation, you can view the [Javadocs](https://hayleyso07.github.io/Mastermind/index.html) of this project.
+For detailed API documentation, you can view the [Javadocs](https://hayleyso.github.io/Mastermind/index.html) of this project.
 
 ## Prerequisites
 Before you begin, ensure you have the following installed:
