@@ -62,7 +62,7 @@ Before you begin, ensure you have the following installed:
 
 ## Running the Application
 1. **Run the Main Class**
-   - Right-click on the main class file (`Mastermind.java`).
+   - Right-click on the main class file (`mastermind.java`).
    - Select `Run As > Run Configurations`.
 2. **Set VM Arguments**
    - In the `Arguments` tab, add the following to **VM arguments**:
